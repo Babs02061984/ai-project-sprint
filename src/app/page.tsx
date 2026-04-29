@@ -78,9 +78,9 @@ export default function Home() {
             className="text-center text-white capitalize mix-blend-overlay w-full whitespace-nowrap"
             style={{
               fontFamily: "var(--font-inter)",
-              fontSize: "198px",
+              fontSize: "clamp(80px, 13.75vw, 198px)",
               fontWeight: 500,
-              letterSpacing: "-13.86px",
+              letterSpacing: "-0.07em",
               lineHeight: 1.1,
               marginBottom: "-15px",
             }}
