@@ -129,7 +129,7 @@ export default function TestimonialsSection() {
         style={{ minHeight: "850px", padding: "120px 32px" }}
       >
         {/* Marko Stojković — top left */}
-        <div className="absolute" style={{ left: "7.1%", top: "142px" }}>
+        <div className="absolute" style={{ left: "7.1%", top: "142px", zIndex: 2 }}>
           <TestimonialCard
             logo={logoMarko}
             logoW={143}
@@ -141,7 +141,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Lukas Weber — top right */}
-        <div className="absolute" style={{ left: "46.9%", top: "272px" }}>
+        <div className="absolute" style={{ left: "46.9%", top: "272px", zIndex: 2 }}>
           <TestimonialCard
             logo={logoLukas}
             logoW={138}
@@ -153,7 +153,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Sarah Jenkins — bottom left */}
-        <div className="absolute" style={{ left: "21.2%", top: "553px" }}>
+        <div className="absolute" style={{ left: "21.2%", top: "553px", zIndex: 2 }}>
           <TestimonialCard
             logo={logoSarah}
             logoW={109}
@@ -165,7 +165,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Sofia Martínez — bottom right */}
-        <div className="absolute" style={{ left: "68.5%", top: "546px" }}>
+        <div className="absolute" style={{ left: "68.5%", top: "546px", zIndex: 2 }}>
           <TestimonialCard
             logo={logoSofia}
             logoW={81}
@@ -188,7 +188,6 @@ export default function TestimonialsSection() {
             color: "#000",
             textAlign: "center",
             position: "relative",
-            zIndex: 1,
           }}
         >
           Testimonials
