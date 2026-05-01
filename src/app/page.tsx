@@ -36,7 +36,12 @@ export default function Home() {
       {/* Background image — mobile (z:-1 so it renders below flow content) */}
       <div
         className="md:hidden absolute inset-y-0 left-0 pointer-events-none"
-        style={{ right: "-39.47%", zIndex: -1 }}
+        style={{
+          right: "-39.47%",
+          zIndex: -1,
+          maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
+        }}
       >
         <img
           src={heroImageMobile}
@@ -55,6 +60,8 @@ export default function Home() {
           transform: "translateY(-50%)",
           aspectRatio: "2291 / 1346",
           zIndex: -1,
+          maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
         }}
       >
         <img
