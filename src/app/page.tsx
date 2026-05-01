@@ -131,7 +131,7 @@ export default function Home() {
       </div>
 
       {/* Mobile hero body — same pattern, no z-index */}
-      <div className="md:hidden flex flex-col justify-between flex-1 relative pb-6">
+      <div className="md:hidden flex flex-col justify-end flex-1 relative pb-6 gap-8">
         <div className="flex flex-col items-center">
           <p
             className="text-white uppercase mix-blend-overlay text-sm leading-[1.1] text-center"
