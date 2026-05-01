@@ -3,7 +3,8 @@
     "allow": [
       "PowerShell(gh auth *)",
       "PowerShell(git *)",
-      "PowerShell(gh repo *)"
+      "PowerShell(gh repo *)",
+      "mcp__claude_ai_Figma__get_design_context"
     ]
   }
 }
