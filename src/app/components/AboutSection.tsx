@@ -13,6 +13,14 @@ const mono: CSSProperties = {
   whiteSpace: "nowrap",
 };
 
+const bodyText: CSSProperties = {
+  fontFamily: "var(--font-inter)",
+  fontSize: "14px",
+  lineHeight: 1.3,
+  letterSpacing: "-0.035em",
+  color: "#1f1f1f",
+};
+
 // L-shaped corner bracket rendered with two border sides
 function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
   const shared = "shrink-0 w-3 h-3 border-[#1f1f1f]";
@@ -25,64 +33,81 @@ function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
   return <div className={`${shared} ${sides[pos]}`} />;
 }
 
+// Reusable bracketed text block
+function BracketedText() {
+  return (
+    <div className="flex items-stretch gap-3 w-full">
+      <div className="flex flex-col justify-between shrink-0">
+        <Corner pos="tl" />
+        <Corner pos="bl" />
+      </div>
+      <p className="flex-1 py-3" style={bodyText}>
+        Placeholder paragraph one. This is where you introduce yourself —
+        your background, your passion for your craft, and what drives you
+        creatively. Two to three sentences work best here.{" "}
+        Placeholder paragraph two. Here you can describe your technical
+        approach, how you collaborate with clients, or what sets your work
+        apart from others in your field.
+      </p>
+      <div className="flex flex-col justify-between items-end shrink-0">
+        <Corner pos="tr" />
+        <Corner pos="br" />
+      </div>
+    </div>
+  );
+}
+
 export default function AboutSection() {
   return (
-    // Desktop-only section (mobile will get its own layout later)
-    <section className="hidden md:flex w-full bg-white px-8 py-20 items-start justify-between">
+    <>
+      {/* ── MOBILE layout ─────────────────────────────────────────────── */}
+      <section className="md:hidden w-full bg-white px-6 pt-10 pb-0">
+        <div className="flex flex-col gap-4">
 
-      {/* ── Left: section label ──────────────────────────────────────── */}
-      <p style={mono}>[ About ]</p>
-
-      {/* ── Right: text block + counter/image ───────────────────────── */}
-      {/* items-end aligns text box bottom with image bottom */}
-      <div className="flex flex-1 gap-8 items-end ml-8">
-
-        {/* Text block with corner brackets */}
-        <div className="flex flex-1 items-stretch gap-3">
-
-          {/* Left bracket column */}
-          <div className="flex flex-col justify-between shrink-0">
-            <Corner pos="tl" />
-            <Corner pos="bl" />
-          </div>
-
-          {/* Body copy */}
-          <p
-            className="flex-1 py-3 text-[14px] leading-[1.3] tracking-[-0.035em] text-[#1f1f1f]"
-            style={{ fontFamily: "var(--font-inter)" }}
-          >
-            Placeholder paragraph one. This is where you introduce yourself —
-            your background, your passion for your craft, and what drives you
-            creatively. Two to three sentences work best here.{" "}
-            Placeholder paragraph two. Here you can describe your technical
-            approach, how you collaborate with clients, or what sets your work
-            apart from others in your field.
-          </p>
-
-          {/* Right bracket column */}
-          <div className="flex flex-col justify-between items-end shrink-0">
-            <Corner pos="tr" />
-            <Corner pos="br" />
-          </div>
-
-        </div>
-
-        {/* Counter + portrait */}
-        <div className="flex gap-6 items-start shrink-0">
           <p style={mono}>002</p>
-          <div
-            className="overflow-hidden shrink-0"
-            style={{ width: "436px", height: "614px" }}
-          >
+          <p style={mono}>[ About ]</p>
+          <BracketedText />
+
+          {/* Full-width portrait, flush to section bottom */}
+          <div className="w-full aspect-[3/4] overflow-hidden">
             <img
               src={aboutImage}
               alt="Portrait"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-top"
             />
           </div>
-        </div>
 
-      </div>
-    </section>
+        </div>
+      </section>
+
+      {/* ── DESKTOP layout ────────────────────────────────────────────── */}
+      <section className="hidden md:flex w-full bg-white px-8 py-20 items-start justify-between">
+
+        {/* Left: section label */}
+        <p style={mono}>[ About ]</p>
+
+        {/* Right: text block + counter/image, bottom-aligned */}
+        <div className="flex flex-1 gap-8 items-end ml-8">
+
+          <BracketedText />
+
+          {/* Counter + portrait */}
+          <div className="flex gap-6 items-start shrink-0">
+            <p style={mono}>002</p>
+            <div
+              className="overflow-hidden shrink-0"
+              style={{ width: "436px", height: "614px" }}
+            >
+              <img
+                src={aboutImage}
+                alt="Portrait"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </>
   );
 }
