@@ -46,7 +46,7 @@ export default function IntroSection() {
         <h2
           style={{
             fontFamily: "var(--font-inter)",
-            fontWeight: 900,
+            fontWeight: 400,
             fontSize: "clamp(36px, 11vw, 60px)",
             lineHeight: 1.05,
             letterSpacing: "-0.03em",
