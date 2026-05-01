@@ -90,6 +90,14 @@ export default function Home() {
         }}
       />
 
+      {/* Gradient overlay — fades hero image into white page background */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[45%] pointer-events-none"
+        style={{
+          background: "linear-gradient(to bottom, transparent 0%, #ffffff 100%)",
+        }}
+      />
+
       {/* Nav (z-20 internally — fine, no blend needed on nav) */}
       <HeroNav />
 
