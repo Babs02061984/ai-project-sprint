@@ -176,8 +176,8 @@ export default function Home() {
     </section>
     <IntroSection />
     <AboutSection />
-    <ServicesSection />
     <FullBleedPhoto />
+    <ServicesSection />
     </>
   );
 }
