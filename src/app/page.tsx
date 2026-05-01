@@ -25,9 +25,10 @@ const description = (
 
 export default function Home() {
   return (
-    // isolation:isolate creates a local stacking context so z-index:-1 images
-    // are visible (behind transparent background) and mix-blend-overlay on the
-    // h1 blends against them rather than escaping to the page backdrop.
+    <>
+    {/* isolation:isolate creates a local stacking context so z-index:-1 images
+        are visible (behind transparent background) and mix-blend-overlay on the
+        h1 blends against them rather than escaping to the page backdrop. */}
     <section
       className="relative h-screen overflow-hidden flex flex-col px-4 md:px-8"
       style={{ isolation: "isolate" }}
@@ -156,5 +157,6 @@ export default function Home() {
       </div>
     </section>
     <IntroSection />
+    </>
   );
 }
