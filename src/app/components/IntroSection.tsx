@@ -1,13 +1,15 @@
+import type { CSSProperties } from "react";
+
 // Font sizes and indents use vw units derived from the 1440px Figma canvas
 // so the layout scales fluidly on all desktop widths.
 // 96px / 1440px = 6.667vw · indents converted proportionally.
 
-const interLight: React.CSSProperties = {
+const interLight: CSSProperties = {
   fontFamily: "var(--font-inter)",
   fontWeight: 300,
 };
 
-const monoLabel: React.CSSProperties = {
+const monoLabel: CSSProperties = {
   fontFamily: "var(--font-geist-mono)",
   fontSize: "14px",
   fontWeight: 400,
@@ -16,7 +18,7 @@ const monoLabel: React.CSSProperties = {
   textTransform: "uppercase" as const,
 };
 
-const bigText: React.CSSProperties = {
+const bigText: CSSProperties = {
   ...interLight,
   fontSize: "clamp(40px, 6.667vw, 96px)",
   letterSpacing: "-0.08em",
