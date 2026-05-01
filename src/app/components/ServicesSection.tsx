@@ -21,12 +21,15 @@ const services = [
   { num: "[ 4 ]", title: "Photography", img: img4 },
 ];
 
-const placeholderDesc =
+const mobileDesc =
+  "We are a creative studio that loves making beautiful websites and premium products. We've won some awards for our work. We're really good at creating brands, designing cool stuff, and making things work just right.";
+
+const desktopDesc =
   "Placeholder description of this service. Explain the value you provide and the outcomes clients can expect. Keep it to two or three sentences.";
 
 export default function ServicesSection() {
   return (
-    <section className="w-full bg-black px-6 py-16 md:px-8 md:py-20 flex flex-col gap-12">
+    <section className="w-full bg-black px-4 py-12 md:px-8 md:py-20 flex flex-col gap-8 md:gap-12">
       {/* Section label */}
       <p style={mono}>[ Services ]</p>
 
@@ -36,7 +39,7 @@ export default function ServicesSection() {
         style={{
           fontFamily: "var(--font-inter)",
           fontWeight: 300,
-          fontSize: "clamp(48px, 6.667vw, 96px)",
+          fontSize: "clamp(32px, 6.667vw, 96px)",
           letterSpacing: "-0.08em",
           lineHeight: 1,
           textTransform: "uppercase",
@@ -58,14 +61,53 @@ export default function ServicesSection() {
             {/* Divider */}
             <div className="w-full border-t border-white" />
 
-            {/* Title + description + thumbnail */}
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between pt-2 gap-4 md:gap-0">
+            {/* ── MOBILE: title → desc → image stacked ─────────────────── */}
+            <div className="md:hidden flex flex-col gap-4 pt-1">
               <p
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 700,
                   fontStyle: "italic",
-                  fontSize: "clamp(24px, 2.5vw, 36px)",
+                  fontSize: "36px",
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1.1,
+                  textTransform: "uppercase",
+                  color: "#ffffff",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {title}
+              </p>
+              <div className="flex flex-col gap-4">
+                <p
+                  style={{
+                    fontFamily: "var(--font-inter)",
+                    fontWeight: 400,
+                    fontSize: "14px",
+                    lineHeight: 1.3,
+                    letterSpacing: "-0.04em",
+                    color: "#ffffff",
+                  }}
+                >
+                  {mobileDesc}
+                </p>
+                <div
+                  className="overflow-hidden"
+                  style={{ width: "151px", height: "151px" }}
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            </div>
+
+            {/* ── DESKTOP: title left, desc + image right ───────────────── */}
+            <div className="hidden md:flex md:items-start md:justify-between pt-2">
+              <p
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 700,
+                  fontStyle: "italic",
+                  fontSize: "36px",
                   letterSpacing: "-0.04em",
                   lineHeight: 1.1,
                   textTransform: "uppercase",
@@ -85,10 +127,10 @@ export default function ServicesSection() {
                     lineHeight: 1.3,
                     letterSpacing: "-0.04em",
                     color: "#ffffff",
-                    maxWidth: "393px",
+                    width: "393px",
                   }}
                 >
-                  {placeholderDesc}
+                  {desktopDesc}
                 </p>
                 <div
                   className="shrink-0 overflow-hidden"
