@@ -2,6 +2,7 @@ import HeroNav from "./components/HeroNav";
 import IntroSection from "./components/IntroSection";
 import AboutSection from "./components/AboutSection";
 import ServicesSection from "./components/ServicesSection";
+import SelectedWorkSection from "./components/SelectedWorkSection";
 import FullBleedPhoto from "./components/FullBleedPhoto";
 
 const heroImageDesktop = "https://www.figma.com/api/mcp/asset/7dac913b-2a4e-4beb-9e27-9ae3fa099203";
@@ -178,6 +179,7 @@ export default function Home() {
     <AboutSection />
     <FullBleedPhoto />
     <ServicesSection />
+    <SelectedWorkSection />
     </>
   );
 }
