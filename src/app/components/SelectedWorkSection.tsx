@@ -33,11 +33,16 @@ function Tag({ label }: { label: string }) {
   );
 }
 
-// Arrow icon — diagonal top-right
 function ArrowIcon() {
   return (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M8 24L24 8M24 8H12M24 8V20" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M8 24L24 8M24 8H12M24 8V20"
+        stroke="#000"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -52,16 +57,61 @@ function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
   return <div className={`shrink-0 w-4 h-4 border-[#1f1f1f] ${sides[pos]}`} />;
 }
 
+function CtaBlock() {
+  return (
+    <div className="flex gap-3 items-stretch justify-center w-full py-6">
+      <div className="flex flex-col justify-between shrink-0" style={{ width: "24px" }}>
+        <Corner pos="tl" />
+        <Corner pos="bl" />
+      </div>
+      <div className="flex-1 flex flex-col gap-[10px] py-3">
+        <p
+          style={{
+            fontFamily: "var(--font-inter)",
+            fontStyle: "italic",
+            fontWeight: 400,
+            fontSize: "14px",
+            lineHeight: 1.3,
+            letterSpacing: "-0.04em",
+            color: "#1f1f1f",
+          }}
+        >
+          Discover how my creativity transforms ideas into impactful digital
+          experiences — schedule a call with me to get started.
+        </p>
+        <button
+          className="bg-black text-white rounded-full w-fit"
+          style={{
+            fontFamily: "var(--font-inter)",
+            fontSize: "14px",
+            fontWeight: 500,
+            letterSpacing: "-0.04em",
+            padding: "12px 16px",
+          }}
+        >
+          Let&apos;s talk
+        </button>
+      </div>
+      <div className="flex flex-col justify-between items-end shrink-0" style={{ width: "24px" }}>
+        <Corner pos="tr" />
+        <Corner pos="br" />
+      </div>
+    </div>
+  );
+}
+
 function ProjectCard({
   title,
   img,
   tags,
   height,
+  titleSize,
 }: {
   title: string;
   img: string;
   tags: string[];
   height: number;
+  titleSize: number;
 }) {
   return (
     <div className="flex flex-col gap-[10px] w-full">
@@ -78,7 +128,7 @@ function ProjectCard({
           style={{
             fontFamily: "var(--font-inter)",
             fontWeight: 900,
-            fontSize: "36px",
+            fontSize: `${titleSize}px`,
             letterSpacing: "-0.04em",
             lineHeight: 1.1,
             textTransform: "uppercase",
@@ -98,97 +148,87 @@ const defaultTags = ["Social Media", "Photography"];
 
 export default function SelectedWorkSection() {
   return (
-    <section className="hidden md:block w-full bg-white px-8 py-20">
-      {/* ── Header ───────────────────────────────────────────────────── */}
-      <div className="flex items-start justify-between w-full mb-[61px]">
-        <div className="flex gap-[10px] items-start">
-          <div
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontWeight: 300,
-              fontSize: "96px",
-              letterSpacing: "-0.08em",
-              lineHeight: 0.86,
-              textTransform: "uppercase",
-              color: "#000",
-            }}
-          >
-            <p>Selected</p>
-            <p>Work</p>
+    <>
+      {/* ── MOBILE layout ─────────────────────────────────────────────── */}
+      <section className="md:hidden w-full bg-white px-4 py-12 flex flex-col gap-8">
+        {/* Header */}
+        <div className="flex flex-col gap-4 uppercase">
+          <p style={mono}>[ portfolio ]</p>
+          <div className="flex items-start justify-between w-full">
+            <div
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontWeight: 300,
+                fontSize: "32px",
+                letterSpacing: "-0.08em",
+                lineHeight: 0.86,
+                textTransform: "uppercase",
+                color: "#000",
+              }}
+            >
+              <p>Selected</p>
+              <p>Work</p>
+            </div>
+            <p style={mono}>004</p>
           </div>
-          <p style={{ ...mono, marginTop: "4px" }}>004</p>
         </div>
-        <div
-          className="flex items-center justify-center"
-          style={{ height: "110px", width: "15px" }}
-        >
-          <p
-            style={{
-              ...mono,
-              transform: "rotate(-90deg)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            [ portfolio ]
-          </p>
+
+        {/* Cards — single column */}
+        <div className="flex flex-col gap-6 w-full">
+          <ProjectCard title="Surfers paradise" img={img1} tags={defaultTags} height={390} titleSize={24} />
+          <ProjectCard title="Cyberpunk caffe"  img={img2} tags={defaultTags} height={390} titleSize={24} />
+          <ProjectCard title="Agency 976"        img={img3} tags={defaultTags} height={390} titleSize={24} />
+          <ProjectCard title="Minimal Playground" img={img4} tags={defaultTags} height={390} titleSize={24} />
         </div>
-      </div>
 
-      {/* ── Two-column masonry grid ───────────────────────────────────── */}
-      <div className="flex gap-6 items-end w-full">
-        {/* Left column */}
-        <div className="flex-1 flex flex-col justify-between gap-0 self-stretch">
-          <ProjectCard title="Surfers paradise" img={img1} tags={defaultTags} height={744} />
+        {/* CTA block */}
+        <CtaBlock />
+      </section>
 
-          {/* CTA bracket block */}
-          <div className="flex gap-3 items-stretch justify-center w-full py-6">
-            <div className="flex flex-col justify-between shrink-0" style={{ width: "24px" }}>
-              <Corner pos="tl" />
-              <Corner pos="bl" />
+      {/* ── DESKTOP layout ────────────────────────────────────────────── */}
+      <section className="hidden md:block w-full bg-white px-8 py-20">
+        {/* Header */}
+        <div className="flex items-start justify-between w-full mb-[61px]">
+          <div className="flex gap-[10px] items-start">
+            <div
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontWeight: 300,
+                fontSize: "96px",
+                letterSpacing: "-0.08em",
+                lineHeight: 0.86,
+                textTransform: "uppercase",
+                color: "#000",
+              }}
+            >
+              <p>Selected</p>
+              <p>Work</p>
             </div>
-            <div className="flex-1 flex flex-col gap-[10px] py-3">
-              <p
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontStyle: "italic",
-                  fontWeight: 400,
-                  fontSize: "14px",
-                  lineHeight: 1.3,
-                  letterSpacing: "-0.04em",
-                  color: "#1f1f1f",
-                }}
-              >
-                Discover how my creativity transforms ideas into impactful digital
-                experiences — schedule a call with me to get started.
-              </p>
-              <button
-                className="bg-black text-white rounded-full w-fit"
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  letterSpacing: "-0.04em",
-                  padding: "12px 16px",
-                }}
-              >
-                Let&apos;s talk
-              </button>
-            </div>
-            <div className="flex flex-col justify-between items-end shrink-0" style={{ width: "24px" }}>
-              <Corner pos="tr" />
-              <Corner pos="br" />
-            </div>
+            <p style={{ ...mono, marginTop: "4px" }}>004</p>
+          </div>
+          <div className="flex items-center justify-center" style={{ height: "110px", width: "15px" }}>
+            <p style={{ ...mono, transform: "rotate(-90deg)", whiteSpace: "nowrap" }}>
+              [ portfolio ]
+            </p>
+          </div>
+        </div>
+
+        {/* Two-column masonry grid */}
+        <div className="flex gap-6 items-end w-full">
+          {/* Left column */}
+          <div className="flex-1 flex flex-col justify-between self-stretch">
+            <ProjectCard title="Surfers paradise" img={img1} tags={defaultTags} height={744} titleSize={36} />
+            <CtaBlock />
+            <ProjectCard title="Cyberpunk caffe" img={img2} tags={defaultTags} height={699} titleSize={36} />
           </div>
 
-          <ProjectCard title="Cyberpunk caffe" img={img2} tags={defaultTags} height={699} />
+          {/* Right column — offset 240px from top */}
+          <div className="flex-1 flex flex-col gap-[117px] pt-[240px]">
+            <ProjectCard title="Agency 976"        img={img3} tags={defaultTags} height={699} titleSize={36} />
+            <ProjectCard title="Minimal Playground" img={img4} tags={defaultTags} height={744} titleSize={36} />
+          </div>
         </div>
-
-        {/* Right column — offset 240px from top */}
-        <div className="flex-1 flex flex-col gap-[117px] pt-[240px]">
-          <ProjectCard title="Agency 976" img={img3} tags={defaultTags} height={699} />
-          <ProjectCard title="Minimal Playground" img={img4} tags={defaultTags} height={744} />
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
