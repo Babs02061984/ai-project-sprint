@@ -24,12 +24,17 @@ const description = (
 
 export default function Home() {
   return (
-    <section className="relative h-screen overflow-hidden flex flex-col px-4 md:px-8">
-
-      {/* Background image — mobile */}
+    // isolation:isolate creates a local stacking context so z-index:-1 images
+    // are visible (behind transparent background) and mix-blend-overlay on the
+    // h1 blends against them rather than escaping to the page backdrop.
+    <section
+      className="relative h-screen overflow-hidden flex flex-col px-4 md:px-8"
+      style={{ isolation: "isolate" }}
+    >
+      {/* Background image — mobile (z:-1 so it renders below flow content) */}
       <div
         className="md:hidden absolute inset-y-0 left-0 pointer-events-none"
-        style={{ right: "-39.47%" }}
+        style={{ right: "-39.47%", zIndex: -1 }}
       >
         <img
           src={heroImageMobile}
@@ -47,6 +52,7 @@ export default function Home() {
           top: "calc(50% + 88.84px)",
           transform: "translateY(-50%)",
           aspectRatio: "2291 / 1346",
+          zIndex: -1,
         }}
       >
         <img
@@ -56,15 +62,29 @@ export default function Home() {
         />
       </div>
 
-      {/* Backdrop blur strip — mobile (bottom) */}
-      <div className="md:hidden absolute bottom-0 left-0 right-0 h-[349px] backdrop-blur-[10px] bg-[rgba(217,217,217,0.01)]" />
-      {/* Backdrop blur strip — desktop (mid-section) */}
-      <div className="hidden md:block absolute left-0 right-0 top-[498px] h-[349px] backdrop-blur-[10px] bg-[rgba(217,217,217,0.01)]" />
+      {/* Blur overlay — mobile, fades in from top */}
+      <div
+        className="md:hidden absolute bottom-0 left-0 right-0 h-[349px] backdrop-blur-[10px]"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 45%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 45%)",
+        }}
+      />
+      {/* Blur overlay — desktop, fades in from top */}
+      <div
+        className="hidden md:block absolute left-0 right-0 top-[498px] h-[349px] backdrop-blur-[10px]"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 45%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 45%)",
+        }}
+      />
 
+      {/* Nav (z-20 internally — fine, no blend needed on nav) */}
       <HeroNav />
 
-      {/* Desktop hero body */}
-      <div className="hidden md:flex flex-col items-center justify-center flex-1 relative z-10">
+      {/* Desktop hero body — position:relative WITHOUT z-index so no stacking
+          context is created and mix-blend-overlay on h1 sees the image backdrop */}
+      <div className="hidden md:flex flex-col items-center justify-center flex-1 relative">
         <div className="w-full" style={{ paddingBottom: "15px" }}>
           <div className="px-[18px]" style={{ marginBottom: "-15px" }}>
             <p
@@ -101,8 +121,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Mobile hero body */}
-      <div className="md:hidden flex flex-col justify-between flex-1 relative z-10 pb-6">
+      {/* Mobile hero body — same pattern, no z-index */}
+      <div className="md:hidden flex flex-col justify-between flex-1 relative pb-6">
         <div className="flex flex-col items-center">
           <p
             className="text-white uppercase mix-blend-overlay text-sm leading-[1.1] text-center"
@@ -114,9 +134,9 @@ export default function Home() {
             className="text-center text-white capitalize mix-blend-overlay w-full whitespace-pre-wrap"
             style={{
               fontFamily: "var(--font-inter)",
-              fontSize: "96px",
+              fontSize: "clamp(60px, 25.6vw, 96px)",
               fontWeight: 500,
-              letterSpacing: "-6.72px",
+              letterSpacing: "-0.07em",
               lineHeight: 0.8,
             }}
           >
@@ -133,7 +153,6 @@ export default function Home() {
           </button>
         </div>
       </div>
-
     </section>
   );
 }
