@@ -3,10 +3,12 @@ import IntroSection from "./components/IntroSection";
 import AboutSection from "./components/AboutSection";
 import ServicesSection from "./components/ServicesSection";
 import SelectedWorkSection from "./components/SelectedWorkSection";
+import type {PortfolioProject} from "./components/SelectedWorkSection";
 import TestimonialsSection from "./components/TestimonialsSection";
 import LatestNewsSection from "./components/LatestNewsSection";
 import Footer from "./components/Footer";
 import FullBleedPhoto from "./components/FullBleedPhoto";
+import {sanityClient, urlFor} from "@/lib/sanity";
 
 const heroImageDesktop = "https://www.figma.com/api/mcp/asset/7dac913b-2a4e-4beb-9e27-9ae3fa099203";
 const heroImageMobile = "https://www.figma.com/api/mcp/asset/d04a103c-7b27-4c31-96c2-e3bdb6eaf074";
@@ -30,7 +32,28 @@ const description = (
   </p>
 );
 
-export default function Home() {
+async function getSelectedWork(): Promise<PortfolioProject[]> {
+  const data = await sanityClient.fetch(`
+    *[_type == "homepage"][0]{
+      selectedWork[]->{
+        _id,
+        title,
+        tags,
+        coverImage
+      }
+    }
+  `)
+  if (!data?.selectedWork) return []
+  return data.selectedWork.map((p: {_id: string; title: string; tags: string[] | null; coverImage?: object}) => ({
+    _id: p._id,
+    title: p.title,
+    tags: p.tags ?? [],
+    coverImageUrl: p.coverImage ? urlFor(p.coverImage).width(800).height(900).fit('crop').url() : null,
+  }))
+}
+
+export default async function Home() {
+  const selectedWork = await getSelectedWork()
   return (
     <>
     {/* isolation:isolate creates a local stacking context so z-index:-1 images
@@ -182,7 +205,7 @@ export default function Home() {
     <AboutSection />
     <FullBleedPhoto />
     <ServicesSection />
-    <SelectedWorkSection />
+    <SelectedWorkSection projects={selectedWork} />
     <TestimonialsSection />
     <LatestNewsSection />
     <Footer />

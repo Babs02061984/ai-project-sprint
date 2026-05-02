@@ -1,36 +1,38 @@
-import type { CSSProperties } from "react";
+import type {CSSProperties} from 'react'
 
-const img1 = "https://www.figma.com/api/mcp/asset/7be5e61c-bc3f-4a0a-a65a-6a49b323524b";
-const img2 = "https://www.figma.com/api/mcp/asset/8de91792-ae5a-415e-893c-cb43a23fc645";
-const img3 = "https://www.figma.com/api/mcp/asset/fdce2f8f-06c5-4042-8823-5f05d488c835";
-const img4 = "https://www.figma.com/api/mcp/asset/230b4dab-9983-481d-891b-fe33a85ba5d1";
+export type PortfolioProject = {
+  _id: string
+  title: string
+  tags: string[] | null
+  coverImageUrl: string | null
+}
 
 const mono: CSSProperties = {
-  fontFamily: "var(--font-geist-mono)",
-  fontSize: "14px",
+  fontFamily: 'var(--font-geist-mono)',
+  fontSize: '14px',
   fontWeight: 400,
   lineHeight: 1.1,
-  color: "#1f1f1f",
-  textTransform: "uppercase",
-};
+  color: '#1f1f1f',
+  textTransform: 'uppercase',
+}
 
-function Tag({ label }: { label: string }) {
+function Tag({label}: {label: string}) {
   return (
     <span
       className="px-2 py-1 rounded-full backdrop-blur-[10px] whitespace-nowrap"
       style={{
-        background: "rgba(255,255,255,0.3)",
-        fontFamily: "var(--font-inter)",
-        fontSize: "14px",
+        background: 'rgba(255,255,255,0.3)',
+        fontFamily: 'var(--font-inter)',
+        fontSize: '14px',
         fontWeight: 500,
-        letterSpacing: "-0.04em",
+        letterSpacing: '-0.04em',
         lineHeight: 1,
-        color: "#111",
+        color: '#111',
       }}
     >
       {label}
     </span>
-  );
+  )
 }
 
 function ArrowIcon() {
@@ -44,79 +46,81 @@ function ArrowIcon() {
         strokeLinejoin="round"
       />
     </svg>
-  );
+  )
 }
 
-function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
+function Corner({pos}: {pos: 'tl' | 'tr' | 'bl' | 'br'}) {
   const sides: Record<string, string> = {
-    tl: "border-t border-l",
-    tr: "border-t border-r",
-    bl: "border-b border-l",
-    br: "border-b border-r",
-  };
-  return <div className={`shrink-0 w-4 h-4 border-[#1f1f1f] ${sides[pos]}`} />;
+    tl: 'border-t border-l',
+    tr: 'border-t border-r',
+    bl: 'border-b border-l',
+    br: 'border-b border-r',
+  }
+  return <div className={`shrink-0 w-4 h-4 border-[#1f1f1f] ${sides[pos]}`} />
 }
 
 function CtaBlock() {
   return (
     <div className="flex gap-3 items-stretch justify-center w-full py-6">
-      <div className="flex flex-col justify-between shrink-0" style={{ width: "24px" }}>
+      <div className="flex flex-col justify-between shrink-0" style={{width: '24px'}}>
         <Corner pos="tl" />
         <Corner pos="bl" />
       </div>
       <div className="flex-1 flex flex-col gap-[10px] py-3">
         <p
           style={{
-            fontFamily: "var(--font-inter)",
-            fontStyle: "italic",
+            fontFamily: 'var(--font-inter)',
+            fontStyle: 'italic',
             fontWeight: 400,
-            fontSize: "14px",
+            fontSize: '14px',
             lineHeight: 1.3,
-            letterSpacing: "-0.04em",
-            color: "#1f1f1f",
+            letterSpacing: '-0.04em',
+            color: '#1f1f1f',
           }}
         >
-          Discover how my creativity transforms ideas into impactful digital
-          experiences — schedule a call with me to get started.
+          Discover how my creativity transforms ideas into impactful digital experiences — schedule a
+          call with me to get started.
         </p>
         <button
           className="bg-black text-white rounded-full w-fit"
           style={{
-            fontFamily: "var(--font-inter)",
-            fontSize: "14px",
+            fontFamily: 'var(--font-inter)',
+            fontSize: '14px',
             fontWeight: 500,
-            letterSpacing: "-0.04em",
-            padding: "12px 16px",
+            letterSpacing: '-0.04em',
+            padding: '12px 16px',
           }}
         >
           Let&apos;s talk
         </button>
       </div>
-      <div className="flex flex-col justify-between items-end shrink-0" style={{ width: "24px" }}>
+      <div className="flex flex-col justify-between items-end shrink-0" style={{width: '24px'}}>
         <Corner pos="tr" />
         <Corner pos="br" />
       </div>
     </div>
-  );
+  )
 }
 
 function ProjectCard({
   title,
-  img,
+  coverImageUrl,
   tags,
   height,
   titleSize,
 }: {
-  title: string;
-  img: string;
-  tags: string[];
-  height: number;
-  titleSize: number;
+  title: string
+  coverImageUrl: string | null
+  tags: string[]
+  height: number
+  titleSize: number
 }) {
   return (
     <div className="flex flex-col gap-[10px] w-full">
-      <div className="relative w-full overflow-hidden" style={{ height }}>
-        <img src={img} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+      <div className="relative w-full overflow-hidden bg-neutral-100" style={{height}}>
+        {coverImageUrl && (
+          <img src={coverImageUrl} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <div className="absolute bottom-4 left-4 flex gap-3">
           {tags.map((t) => (
             <Tag key={t} label={t} />
@@ -126,14 +130,14 @@ function ProjectCard({
       <div className="flex items-center justify-between w-full">
         <p
           style={{
-            fontFamily: "var(--font-inter)",
+            fontFamily: 'var(--font-inter)',
             fontWeight: 900,
             fontSize: `${titleSize}px`,
-            letterSpacing: "-0.04em",
+            letterSpacing: '-0.04em',
             lineHeight: 1.1,
-            textTransform: "uppercase",
-            color: "#000",
-            whiteSpace: "nowrap",
+            textTransform: 'uppercase',
+            color: '#000',
+            whiteSpace: 'nowrap',
           }}
         >
           {title}
@@ -141,94 +145,120 @@ function ProjectCard({
         <ArrowIcon />
       </div>
     </div>
-  );
+  )
 }
 
-const defaultTags = ["Social Media", "Photography"];
+export default function SelectedWorkSection({projects}: {projects: PortfolioProject[]}) {
+  const leftItems = projects.slice(0, 2)
+  const rightItems = projects.slice(2, 4)
 
-export default function SelectedWorkSection() {
   return (
     <>
       {/* ── MOBILE layout ─────────────────────────────────────────────── */}
       <section className="md:hidden w-full bg-white px-4 py-12 flex flex-col gap-8">
-        {/* Header */}
         <div className="flex flex-col gap-4 uppercase">
           <p style={mono}>[ portfolio ]</p>
           <div className="flex items-start justify-between w-full">
             <div
               style={{
-                fontFamily: "var(--font-inter)",
+                fontFamily: 'var(--font-inter)',
                 fontWeight: 300,
-                fontSize: "32px",
-                letterSpacing: "-0.08em",
+                fontSize: '32px',
+                letterSpacing: '-0.08em',
                 lineHeight: 0.86,
-                textTransform: "uppercase",
-                color: "#000",
+                textTransform: 'uppercase',
+                color: '#000',
               }}
             >
               <p>Selected</p>
               <p>Work</p>
             </div>
-            <p style={mono}>004</p>
+            <p style={mono}>{String(projects.length).padStart(3, '0')}</p>
           </div>
         </div>
 
-        {/* Cards — single column */}
         <div className="flex flex-col gap-6 w-full">
-          <ProjectCard title="Surfers paradise" img={img1} tags={defaultTags} height={390} titleSize={24} />
-          <ProjectCard title="Cyberpunk caffe"  img={img2} tags={defaultTags} height={390} titleSize={24} />
-          <ProjectCard title="Agency 976"        img={img3} tags={defaultTags} height={390} titleSize={24} />
-          <ProjectCard title="Minimal Playground" img={img4} tags={defaultTags} height={390} titleSize={24} />
+          {projects.map((project) => (
+            <ProjectCard
+              key={project._id}
+              title={project.title}
+              coverImageUrl={project.coverImageUrl}
+              tags={project.tags ?? []}
+              height={390}
+              titleSize={24}
+            />
+          ))}
         </div>
 
-        {/* CTA block */}
         <CtaBlock />
       </section>
 
       {/* ── DESKTOP layout ────────────────────────────────────────────── */}
       <section className="hidden md:block w-full bg-white px-8 py-20">
-        {/* Header */}
         <div className="flex items-start justify-between w-full mb-[61px]">
           <div className="flex gap-[10px] items-start">
             <div
               style={{
-                fontFamily: "var(--font-inter)",
+                fontFamily: 'var(--font-inter)',
                 fontWeight: 300,
-                fontSize: "96px",
-                letterSpacing: "-0.08em",
+                fontSize: '96px',
+                letterSpacing: '-0.08em',
                 lineHeight: 0.86,
-                textTransform: "uppercase",
-                color: "#000",
+                textTransform: 'uppercase',
+                color: '#000',
               }}
             >
               <p>Selected</p>
               <p>Work</p>
             </div>
-            <p style={{ ...mono, marginTop: "4px" }}>004</p>
+            <p style={{...mono, marginTop: '4px'}}>{String(projects.length).padStart(3, '0')}</p>
           </div>
-          <div className="flex items-center justify-center" style={{ height: "110px", width: "15px" }}>
-            <p style={{ ...mono, transform: "rotate(-90deg)", whiteSpace: "nowrap" }}>
-              [ portfolio ]
-            </p>
+          <div className="flex items-center justify-center" style={{height: '110px', width: '15px'}}>
+            <p style={{...mono, transform: 'rotate(-90deg)', whiteSpace: 'nowrap'}}>[ portfolio ]</p>
           </div>
         </div>
 
-        {/* Two-column masonry grid */}
         <div className="flex gap-6 items-end w-full">
           {/* Left column */}
-          <div className="flex-1 flex flex-col justify-between self-stretch">
-            <ProjectCard title="Surfers paradise" img={img1} tags={defaultTags} height={744} titleSize={36} />
+          <div className="flex-1 flex flex-col justify-between self-stretch gap-6">
+            {leftItems[0] && (
+              <ProjectCard
+                title={leftItems[0].title}
+                coverImageUrl={leftItems[0].coverImageUrl}
+                tags={leftItems[0].tags ?? []}
+                height={744}
+                titleSize={36}
+              />
+            )}
             <CtaBlock />
-            <ProjectCard title="Cyberpunk caffe" img={img2} tags={defaultTags} height={699} titleSize={36} />
+            {leftItems[1] && (
+              <ProjectCard
+                title={leftItems[1].title}
+                coverImageUrl={leftItems[1].coverImageUrl}
+                tags={leftItems[1].tags ?? []}
+                height={699}
+                titleSize={36}
+              />
+            )}
           </div>
 
           {/* Right column — offset 240px from top */}
-          <div className="flex-1 flex flex-col gap-[117px] pt-[240px]">
-            <ProjectCard title="Agency 976"        img={img3} tags={defaultTags} height={699} titleSize={36} />
-            <ProjectCard title="Minimal Playground" img={img4} tags={defaultTags} height={744} titleSize={36} />
-          </div>
+          {rightItems.length > 0 && (
+            <div className="flex-1 flex flex-col gap-[117px] pt-[240px]">
+              {rightItems.map((project) => (
+                <ProjectCard
+                  key={project._id}
+                  title={project.title}
+                  coverImageUrl={project.coverImageUrl}
+                  tags={project.tags ?? []}
+                  height={699}
+                  titleSize={36}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>
-  );
+  )
 }
