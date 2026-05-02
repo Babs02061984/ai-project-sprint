@@ -120,9 +120,9 @@ export default async function Home() {
 
       {/* Gradient overlay — fades hero image into white page background */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-[60%] pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 60%)",
+          background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6) 35%, rgba(255,255,255,0) 70%)",
         }}
       />
 
