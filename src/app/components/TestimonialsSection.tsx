@@ -96,10 +96,18 @@ export default function TestimonialsSection() {
           Testimonials
         </h2>
 
-        {/* Horizontal scroll with peeking overlap */}
-        <div className="-mx-4 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-          <div className="flex items-center pl-4 pr-4" style={{ width: "max-content" }}>
-            <div style={{ marginRight: "-10px", position: "relative", zIndex: 1 }}>
+        {/* Horizontal swipe with scroll snap */}
+        <div
+          className="-mx-4 overflow-x-auto"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          <div className="flex items-center pl-4" style={{ gap: "12px", paddingRight: "16px" }}>
+            <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
               <TestimonialCard
                 logo={logoMarkoMobile}
                 logoW={143}
@@ -107,18 +115,20 @@ export default function TestimonialsSection() {
                 quote="A brilliant creative partner who transformed our vision into a unique, high-impact brand identity. Their ability to craft everything from custom mascots to polished logos is truly impressive."
                 name="Marko Stojković"
                 rotate={-3.5}
-                width={260}
+                width={300}
               />
             </div>
-            <TestimonialCard
-              logo={logoSofiaMobile}
-              logoW={81}
-              logoH={36}
-              quote="An incredibly versatile designer who delivers consistent quality across a wide range of styles and formats."
-              name="Sofia Martínez"
-              rotate={2}
-              width={260}
-            />
+            <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
+              <TestimonialCard
+                logo={logoSofiaMobile}
+                logoW={81}
+                logoH={36}
+                quote="An incredibly versatile designer who delivers consistent quality across a wide range of styles and formats."
+                name="Sofia Martínez"
+                rotate={2}
+                width={300}
+              />
+            </div>
           </div>
         </div>
       </section>
