@@ -81,29 +81,33 @@ export default function TestimonialsSection() {
   return (
     <>
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
-      <section className="md:hidden w-full bg-white px-4 pt-16 pb-10 flex flex-col gap-10">
-        <h2
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontWeight: 500,
-            fontSize: "64px",
-            letterSpacing: "-0.07em",
-            lineHeight: 0.8,
-            textTransform: "capitalize",
-            color: "#000",
-          }}
-        >
-          Testimonials
-        </h2>
+      <section className="md:hidden w-full bg-white pt-16 pb-10" style={{ position: "relative" }}>
+        {/* Heading — lineHeight 1 prevents glyph clipping; z-index 1 sits behind cards */}
+        <div className="px-4" style={{ position: "relative", zIndex: 1 }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-inter)",
+              fontWeight: 500,
+              fontSize: "clamp(52px, 16vw, 64px)",
+              letterSpacing: "-0.07em",
+              lineHeight: 1,
+              textTransform: "capitalize",
+              color: "#000",
+            }}
+          >
+            Testimonials
+          </h2>
+        </div>
 
-        {/* Horizontal swipe — overflow-hidden removed from section so rotated
-            cards aren't clipped; padding-top/bottom on the track gives the
-            rotation overhang room inside the scrollable area. */}
+        {/* Slider — negative margin pulls it up to slightly overlap heading bottom;
+            z-index 2 ensures cards sit in front of the heading text.
+            No rotation on mobile — keeps cards fully readable in the slider. */}
         <div
-          className="-mx-4"
           style={{
+            position: "relative",
+            zIndex: 2,
+            marginTop: "-8px",
             overflowX: "auto",
-            overflowY: "visible",
             scrollbarWidth: "none",
             msOverflowStyle: "none",
             scrollSnapType: "x mandatory",
@@ -111,8 +115,8 @@ export default function TestimonialsSection() {
           }}
         >
           <div
-            className="flex pl-4"
-            style={{ gap: "16px", paddingRight: "16px", paddingTop: "20px", paddingBottom: "20px" }}
+            className="flex"
+            style={{ gap: "12px", paddingLeft: "16px", paddingRight: "16px", paddingTop: "16px", paddingBottom: "16px" }}
           >
             <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
               <TestimonialCard
@@ -121,7 +125,29 @@ export default function TestimonialsSection() {
                 logoH={19}
                 quote="A brilliant creative partner who transformed our vision into a unique, high-impact brand identity. Their ability to craft everything from custom mascots to polished logos is truly impressive."
                 name="Marko Stojković"
-                rotate={-3.5}
+                rotate={0}
+                width={300}
+              />
+            </div>
+            <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
+              <TestimonialCard
+                logo={logoLukas}
+                logoW={138}
+                logoH={19}
+                quote="Professional, precise, and incredibly fast at handling complex product visualizations and templates."
+                name="Lukas Weber"
+                rotate={0}
+                width={300}
+              />
+            </div>
+            <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
+              <TestimonialCard
+                logo={logoSarah}
+                logoW={109}
+                logoH={31}
+                quote="A strategic partner who balances stunning aesthetics with high-performance UX for complex platforms. They don't just make things look good; they solve business problems through visual clarity."
+                name="Sarah Jenkins"
+                rotate={0}
                 width={300}
               />
             </div>
@@ -132,7 +158,7 @@ export default function TestimonialsSection() {
                 logoH={36}
                 quote="An incredibly versatile designer who delivers consistent quality across a wide range of styles and formats."
                 name="Sofia Martínez"
-                rotate={2}
+                rotate={0}
                 width={300}
               />
             </div>
