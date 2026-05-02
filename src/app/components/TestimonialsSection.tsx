@@ -81,7 +81,7 @@ export default function TestimonialsSection() {
   return (
     <>
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
-      <section className="md:hidden w-full bg-white px-4 py-16 flex flex-col gap-8 overflow-hidden">
+      <section className="md:hidden w-full bg-white px-4 pt-16 pb-10 flex flex-col gap-10">
         <h2
           style={{
             fontFamily: "var(--font-inter)",
@@ -96,17 +96,24 @@ export default function TestimonialsSection() {
           Testimonials
         </h2>
 
-        {/* Horizontal swipe with scroll snap */}
+        {/* Horizontal swipe — overflow-hidden removed from section so rotated
+            cards aren't clipped; padding-top/bottom on the track gives the
+            rotation overhang room inside the scrollable area. */}
         <div
-          className="-mx-4 overflow-x-auto"
+          className="-mx-4"
           style={{
+            overflowX: "auto",
+            overflowY: "visible",
             scrollbarWidth: "none",
             msOverflowStyle: "none",
             scrollSnapType: "x mandatory",
             WebkitOverflowScrolling: "touch",
           }}
         >
-          <div className="flex items-center pl-4" style={{ gap: "12px", paddingRight: "16px" }}>
+          <div
+            className="flex pl-4"
+            style={{ gap: "16px", paddingRight: "16px", paddingTop: "20px", paddingBottom: "20px" }}
+          >
             <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
               <TestimonialCard
                 logo={logoMarkoMobile}
