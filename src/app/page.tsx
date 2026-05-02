@@ -122,7 +122,7 @@ export default async function Home() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6) 35%, rgba(255,255,255,0) 70%)",
+          background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,0) 50%)",
         }}
       />
 
