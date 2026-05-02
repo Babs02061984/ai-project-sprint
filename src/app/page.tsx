@@ -101,20 +101,20 @@ export default async function Home() {
         />
       </div>
 
-      {/* Blur overlay — mobile, fades in from top */}
+      {/* Blur overlay — mobile, fades in from top and out at bottom */}
       <div
         className="md:hidden absolute bottom-0 left-0 right-0 h-[349px] backdrop-blur-[10px]"
         style={{
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 45%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 45%)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 30%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 30%, transparent 100%)",
         }}
       />
-      {/* Blur overlay — desktop, fades in from top */}
+      {/* Blur overlay — desktop, fades in from top and out at bottom */}
       <div
         className="hidden md:block absolute left-0 right-0 top-[498px] h-[349px] backdrop-blur-[10px]"
         style={{
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 45%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 45%)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 30%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 30%, transparent 100%)",
         }}
       />
 
@@ -122,7 +122,7 @@ export default async function Home() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 25%)",
+          background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20%)",
         }}
       />
 
