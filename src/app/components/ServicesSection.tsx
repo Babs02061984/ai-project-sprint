@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 const img1 = "/cream_on_palmtree_leef.png";
 const img2 = "/dashboard_screenshot.png";
 const img3 = "/surfboard.png";
-const img4 = "/guy_with_kamera.png";
+const img4 = "/signs_hanging_in_the_hall.png";
 
 const mono: CSSProperties = {
   fontFamily: "var(--font-geist-mono)",

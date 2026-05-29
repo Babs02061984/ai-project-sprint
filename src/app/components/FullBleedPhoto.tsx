@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const photo = "/signs_hanging_in_the_hall.png";
+const photo = "/guy_with_kamera.png";
 
 export default function FullBleedPhoto() {
   const containerRef = useRef<HTMLDivElement>(null);
