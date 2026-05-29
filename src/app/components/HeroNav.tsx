@@ -1,10 +1,18 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import MagneticButton from "./MagneticButton";
 
-const navLinks = ["About", "Services", "Projects", "News", "Contact"];
+const navLinks = [
+  { label: "About",    href: "/about" },
+  { label: "Services", href: "/" },
+  { label: "Projects", href: "/" },
+  { label: "News",     href: "/" },
+  { label: "Contact",  href: "/" },
+];
 
 // ─── Hamburger → X ───────────────────────────────────────────────────────────
 function HamburgerButton({ open, onClick }: { open: boolean; onClick: () => void }) {
@@ -51,16 +59,15 @@ function HamburgerButton({ open, onClick }: { open: boolean; onClick: () => void
 // Underline grows from the centre outward with an elastic spring.
 function NavLink({
   label,
+  href,
   active,
-  onClick,
 }: {
   label: string;
+  href: string;
   active: boolean;
-  onClick: () => void;
 }) {
   const lineRef = useRef<HTMLSpanElement>(null);
 
-  // Spring in when active, quick retract when deactivated
   useEffect(() => {
     if (!lineRef.current) return;
     if (active) {
@@ -101,14 +108,13 @@ function NavLink({
   };
 
   return (
-    <a
-      href="#"
+    <Link
+      href={href}
       className="relative inline-block pb-[4px]"
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      onClick={(e) => { e.preventDefault(); onClick(); }}
     >
-      {/* Invisible bold copy — always reserves the bold text width */}
+      {/* Invisible bold ghost — reserves bold width so neighbours never shift */}
       <span
         aria-hidden="true"
         style={{ fontWeight: 700, visibility: "hidden", display: "block", whiteSpace: "nowrap" }}
@@ -116,7 +122,7 @@ function NavLink({
         {label}
       </span>
 
-      {/* Visible text — sits over the ghost, switches weight on active */}
+      {/* Visible text */}
       <span
         style={{
           position: "absolute",
@@ -147,15 +153,18 @@ function NavLink({
           transformOrigin: "center",
         }}
       />
-    </a>
+    </Link>
   );
 }
 
 // ─── Main nav ─────────────────────────────────────────────────────────────────
 export default function HeroNav() {
+  const pathname = usePathname();
   const [menuOpen,   setMenuOpen]   = useState(false);
-  const [activeLink, setActiveLink] = useState<string | null>(null);
   const [isOverDark, setIsOverDark] = useState(false);
+
+  // Derive active link from current route
+  const activeLink = navLinks.find((l) => l.href === pathname)?.label ?? null;
 
   const navRef       = useRef<HTMLElement>(null);
   const overlayRef   = useRef<HTMLDivElement>(null);
@@ -245,12 +254,12 @@ export default function HeroNav() {
 
         {/* Desktop links */}
         <div className="hidden md:flex gap-14 text-base capitalize">
-          {navLinks.map((link) => (
+          {navLinks.map(({ label, href }) => (
             <NavLink
-              key={link}
-              label={link}
-              active={activeLink === link}
-              onClick={() => setActiveLink(link)}
+              key={label}
+              label={label}
+              href={href}
+              active={activeLink === label}
             />
           ))}
         </div>
@@ -269,18 +278,18 @@ export default function HeroNav() {
         style={{ fontFamily: "var(--font-inter)", display: "none" }}
       >
         <ul className="flex flex-col gap-8">
-          {navLinks.map((link, i) => (
+          {navLinks.map(({ label, href }, i) => (
             <li
-              key={link}
+              key={label}
               ref={(el) => { linkItemsRef.current[i] = el; }}
             >
-              <a
-                href="#"
+              <Link
+                href={href}
                 className="text-4xl font-semibold capitalize tracking-[-0.04em] text-black"
-                onClick={() => { setActiveLink(link); setMenuOpen(false); }}
+                onClick={() => setMenuOpen(false)}
               >
-                {link}
-              </a>
+                {label}
+              </Link>
             </li>
           ))}
         </ul>
