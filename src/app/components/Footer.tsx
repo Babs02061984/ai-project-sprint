@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import MagneticButton from "./MagneticButton";
 
 const socialStyle: CSSProperties = {
   fontFamily: "var(--font-inter)",
@@ -51,18 +52,14 @@ function Tagline() {
 
 function TalkButton() {
   return (
-    <button
-      className="border border-white text-white rounded-full w-fit"
+    <MagneticButton
       style={{
-        fontFamily: "var(--font-inter)",
-        fontSize: "14px",
-        fontWeight: 500,
-        letterSpacing: "-0.04em",
-        padding: "12px 16px",
+        backgroundColor: "transparent",
+        border: "1.5px solid #fff",
       }}
     >
       Let&apos;s talk
-    </button>
+    </MagneticButton>
   );
 }
 
@@ -70,7 +67,7 @@ export default function Footer() {
   return (
     <>
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
-      <footer className="md:hidden bg-black pt-12 px-4 flex flex-col gap-12">
+      <footer data-nav-dark className="md:hidden bg-black pt-12 px-4 flex flex-col gap-12">
         {/* Top */}
         <div className="flex flex-col gap-6 w-full">
           <div className="flex flex-col gap-4">
@@ -112,7 +109,7 @@ export default function Footer() {
       </footer>
 
       {/* ── DESKTOP ────────────────────────────────────────────────────── */}
-      <footer className="hidden md:flex bg-black pt-12 px-8 flex-col gap-[120px]">
+      <footer data-nav-dark className="hidden md:flex bg-black pt-12 px-8 flex-col gap-[120px]">
         {/* Top: CTA — social center — social right + divider */}
         <div className="flex flex-col gap-12 w-full">
           <div className="flex items-start justify-between w-full">

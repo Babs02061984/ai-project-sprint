@@ -1,4 +1,5 @@
 import type {CSSProperties} from 'react'
+import MagneticButton from './MagneticButton'
 
 export type PortfolioProject = {
   _id: string
@@ -81,18 +82,7 @@ function CtaBlock() {
           Discover how my creativity transforms ideas into impactful digital experiences — schedule a
           call with me to get started.
         </p>
-        <button
-          className="bg-black text-white rounded-full w-fit"
-          style={{
-            fontFamily: 'var(--font-inter)',
-            fontSize: '14px',
-            fontWeight: 500,
-            letterSpacing: '-0.04em',
-            padding: '12px 16px',
-          }}
-        >
-          Let&apos;s talk
-        </button>
+        <MagneticButton>Let&apos;s talk</MagneticButton>
       </div>
       <div className="flex flex-col justify-between items-end shrink-0" style={{width: '24px'}}>
         <Corner pos="tr" />

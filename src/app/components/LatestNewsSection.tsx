@@ -1,14 +1,12 @@
 import type { CSSProperties } from "react";
 
-// Desktop images
-const img1d = "https://www.figma.com/api/mcp/asset/b2e65603-94e9-4d5e-88b8-60bf804e93d1";
-const img2d = "https://www.figma.com/api/mcp/asset/bd16eb38-f25f-4c52-90f5-ab8012bb28e7";
-const img3d = "https://www.figma.com/api/mcp/asset/79b0c0a1-f572-473c-896f-e56a6073631c";
+const img1d = "/hand_draws_wireframe.png";
+const img2d = "/paper_Magazine_Eames.png";
+const img3d = "/hands_holding_books.png";
 
-// Mobile images
-const img1m = "https://www.figma.com/api/mcp/asset/574f9f35-e041-40d5-8d38-b1f86692a9e2";
-const img2m = "https://www.figma.com/api/mcp/asset/6f9f9423-4d16-46fa-84af-e2891c279ada";
-const img3m = "https://www.figma.com/api/mcp/asset/624f525e-efac-4a20-be07-5b00ba93aa9b";
+const img1m = "/hand_draws_wireframe.png";
+const img2m = "/paper_Magazine_Eames.png";
+const img3m = "/hands_holding_books.png";
 
 const bodyText: CSSProperties = {
   fontFamily: "var(--font-inter)",

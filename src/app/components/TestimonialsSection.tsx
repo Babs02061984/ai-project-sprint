@@ -1,14 +1,16 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { useState, useRef } from "react";
 
 // Desktop logo assets
-const logoLukas = "https://www.figma.com/api/mcp/asset/2fbe03da-8a68-46a3-809b-4314c807bf0e";
-const logoMarko = "https://www.figma.com/api/mcp/asset/9d7a9f0c-bad6-4da6-a184-9f7e6f4757aa";
-const logoSarah = "https://www.figma.com/api/mcp/asset/87c1c0f1-1181-45e5-ba7e-4e12654f84c2";
-const logoSofia = "https://www.figma.com/api/mcp/asset/855f66af-4727-4554-9a21-ea25a336ecee";
+const logoLukas = "/Frame.svg";
+const logoMarko = "/Frame_2.svg";
+const logoSarah = "/Frame_3.svg";
+const logoSofia = "/Frame_4.svg";
 
 // Mobile logo assets
-const logoMarkoMobile = "https://www.figma.com/api/mcp/asset/8480107c-bf53-4597-9bf0-817914389661";
-const logoSofiaMobile = "https://www.figma.com/api/mcp/asset/bdcdd24d-e706-4ce6-9420-55fa82b3e3f8";
+const logoMarkoMobile = "/Frame_2.svg";
+const logoSofiaMobile = "/Frame_4.svg";
 
 function TestimonialCard({
   logo,
@@ -25,7 +27,7 @@ function TestimonialCard({
   quote: string;
   name: string;
   rotate: number;
-  width?: number;
+  width?: number | string;
 }) {
   return (
     <div
@@ -40,6 +42,7 @@ function TestimonialCard({
         flexDirection: "column",
         gap: "16px",
         flexShrink: 0,
+        boxSizing: "border-box",
       }}
     >
       <img
@@ -77,17 +80,145 @@ function TestimonialCard({
   );
 }
 
+const mobileCards = [
+  {
+    logo: logoMarkoMobile,
+    logoW: 143,
+    logoH: 19,
+    quote:
+      "A brilliant creative partner who transformed our vision into a unique, high-impact brand identity. Their ability to craft everything from custom mascots to polished logos is truly impressive.",
+    name: "Marko Stojković",
+  },
+  {
+    logo: logoLukas,
+    logoW: 138,
+    logoH: 19,
+    quote:
+      "Professional, precise, and incredibly fast at handling complex product visualizations and templates.",
+    name: "Lukas Weber",
+  },
+  {
+    logo: logoSarah,
+    logoW: 109,
+    logoH: 31,
+    quote:
+      "A strategic partner who balances stunning aesthetics with high-performance UX for complex platforms. They don't just make things look good; they solve business problems through visual clarity.",
+    name: "Sarah Jenkins",
+  },
+  {
+    logo: logoSofiaMobile,
+    logoW: 81,
+    logoH: 36,
+    quote:
+      "An incredibly versatile designer who delivers consistent quality across a wide range of styles and formats.",
+    name: "Sofia Martínez",
+  },
+];
+
+// Gap between cards in the peek slider (px)
+const CARD_GAP = 12;
+
+function MobileSlider() {
+  const [current, setCurrent] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    const el = containerRef.current;
+    if (!el) return;
+    // Card width = 82vw; gap = CARD_GAP. Step = cardWidth + gap.
+    const cardWidth = el.offsetWidth * 0.82;
+    const index = Math.round(el.scrollLeft / (cardWidth + CARD_GAP));
+    setCurrent(Math.min(Math.max(index, 0), mobileCards.length - 1));
+  };
+
+  const scrollToCard = (index: number) => {
+    const el = containerRef.current;
+    if (!el) return;
+    const cardWidth = el.offsetWidth * 0.82;
+    el.scrollTo({ left: (cardWidth + CARD_GAP) * index, behavior: "smooth" });
+    setCurrent(index);
+  };
+
+  return (
+    <>
+      {/* Peek slider — 82vw cards leave ~18vw for the next card to peek in */}
+      <div
+        ref={containerRef}
+        onScroll={handleScroll}
+        style={{
+          display: "flex",
+          overflowX: "auto",
+          scrollSnapType: "x mandatory",
+          scrollbarWidth: "none",
+          // @ts-ignore — non-standard but needed for Safari momentum scrolling
+          WebkitOverflowScrolling: "touch",
+          paddingLeft: 16,
+          paddingRight: 16,
+          gap: CARD_GAP,
+          // Hide scrollbar on webkit
+          msOverflowStyle: "none",
+        }}
+      >
+        {mobileCards.map((card, i) => (
+          <div
+            key={i}
+            style={{
+              scrollSnapAlign: "start",
+              flexShrink: 0,
+              // 82vw so ~18vw of the next card peeks in from the right
+              width: "82vw",
+            }}
+          >
+            <TestimonialCard {...card} rotate={0} width="100%" />
+          </div>
+        ))}
+      </div>
+
+      {/* Dot indicators — sync with scroll position */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: 8,
+          padding: "16px 0 32px",
+        }}
+      >
+        {mobileCards.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollToCard(i)}
+            aria-label={`Testimonial ${i + 1}`}
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: i === current ? "#000" : "#ccc",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+              transition: "background 0.2s",
+            }}
+          />
+        ))}
+      </div>
+    </>
+  );
+}
+
 export default function TestimonialsSection() {
   return (
     <>
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
-      <section className="md:hidden w-full bg-white pt-16 pb-10" style={{ position: "relative" }}>
-        {/* Heading — lineHeight 1 prevents glyph clipping; z-index 1 sits behind cards */}
-        <div className="px-4" style={{ position: "relative", zIndex: 1 }}>
+      <section
+        className="md:hidden w-full bg-white"
+        style={{ paddingTop: 64 }}
+      >
+        {/* Heading */}
+        <div style={{ paddingLeft: 16, paddingRight: 16, marginBottom: 8 }}>
           <h2
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 500,
+              fontWeight: 700,
               fontSize: "clamp(52px, 16vw, 64px)",
               letterSpacing: "-0.07em",
               lineHeight: 1,
@@ -99,80 +230,21 @@ export default function TestimonialsSection() {
           </h2>
         </div>
 
-        {/* Slider — negative margin pulls it up to slightly overlap heading bottom;
-            z-index 2 ensures cards sit in front of the heading text.
-            No rotation on mobile — keeps cards fully readable in the slider. */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 2,
-            marginTop: "-8px",
-            overflowX: "auto",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            scrollSnapType: "x mandatory",
-            WebkitOverflowScrolling: "touch",
-          }}
-        >
-          <div
-            className="flex"
-            style={{ gap: "12px", paddingLeft: "16px", paddingRight: "16px", paddingTop: "16px", paddingBottom: "16px" }}
-          >
-            <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
-              <TestimonialCard
-                logo={logoMarkoMobile}
-                logoW={143}
-                logoH={19}
-                quote="A brilliant creative partner who transformed our vision into a unique, high-impact brand identity. Their ability to craft everything from custom mascots to polished logos is truly impressive."
-                name="Marko Stojković"
-                rotate={0}
-                width={300}
-              />
-            </div>
-            <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
-              <TestimonialCard
-                logo={logoLukas}
-                logoW={138}
-                logoH={19}
-                quote="Professional, precise, and incredibly fast at handling complex product visualizations and templates."
-                name="Lukas Weber"
-                rotate={0}
-                width={300}
-              />
-            </div>
-            <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
-              <TestimonialCard
-                logo={logoSarah}
-                logoW={109}
-                logoH={31}
-                quote="A strategic partner who balances stunning aesthetics with high-performance UX for complex platforms. They don't just make things look good; they solve business problems through visual clarity."
-                name="Sarah Jenkins"
-                rotate={0}
-                width={300}
-              />
-            </div>
-            <div style={{ scrollSnapAlign: "start", flexShrink: 0 }}>
-              <TestimonialCard
-                logo={logoSofiaMobile}
-                logoW={81}
-                logoH={36}
-                quote="An incredibly versatile designer who delivers consistent quality across a wide range of styles and formats."
-                name="Sofia Martínez"
-                rotate={0}
-                width={300}
-              />
-            </div>
-          </div>
-        </div>
+        {/* Peek slider with synced dots */}
+        <MobileSlider />
       </section>
 
       {/* ── DESKTOP ────────────────────────────────────────────────────── */}
+      {/*
+        No overflow-hidden so rotated cards at the edges aren't clipped.
+        Heading: zIndex 1  |  Cards: zIndex 2  → cards overlap the heading text.
+      */}
       <section
-        className="hidden md:flex w-full bg-white items-center justify-center relative overflow-hidden"
-        style={{ minHeight: "850px", padding: "120px 32px" }}
+        className="hidden md:flex w-full bg-white items-center justify-center relative"
+        style={{ minHeight: "940px", padding: "100px 32px" }}
       >
-        {/* Marko Stojković — top left */}
-        <div className="absolute" style={{ left: "7.1%", top: "142px", zIndex: 2 }}>
+        {/* Marko Stojković — top left, rotated CCW */}
+        <div className="absolute" style={{ left: "7.1%", top: "130px", zIndex: 2 }}>
           <TestimonialCard
             logo={logoMarko}
             logoW={143}
@@ -183,8 +255,8 @@ export default function TestimonialsSection() {
           />
         </div>
 
-        {/* Lukas Weber — top right */}
-        <div className="absolute" style={{ left: "46.9%", top: "272px", zIndex: 2 }}>
+        {/* Lukas Weber — center right, rotated CW */}
+        <div className="absolute" style={{ left: "47%", top: "255px", zIndex: 2 }}>
           <TestimonialCard
             logo={logoLukas}
             logoW={138}
@@ -195,8 +267,8 @@ export default function TestimonialsSection() {
           />
         </div>
 
-        {/* Sarah Jenkins — bottom left */}
-        <div className="absolute" style={{ left: "21.2%", top: "553px", zIndex: 2 }}>
+        {/* Sarah Jenkins — bottom left, rotated CW */}
+        <div className="absolute" style={{ left: "21%", top: "540px", zIndex: 2 }}>
           <TestimonialCard
             logo={logoSarah}
             logoW={109}
@@ -207,8 +279,8 @@ export default function TestimonialsSection() {
           />
         </div>
 
-        {/* Sofia Martínez — bottom right */}
-        <div className="absolute" style={{ left: "68.5%", top: "546px", zIndex: 2 }}>
+        {/* Sofia Martínez — bottom right, rotated CCW */}
+        <div className="absolute" style={{ left: "68.5%", top: "530px", zIndex: 2 }}>
           <TestimonialCard
             logo={logoSofia}
             logoW={81}
@@ -219,18 +291,19 @@ export default function TestimonialsSection() {
           />
         </div>
 
-        {/* Heading — centered, above cards */}
+        {/* Heading — centered, behind all cards */}
         <h2
           style={{
             fontFamily: "var(--font-inter)",
-            fontWeight: 500,
-            fontSize: "198px",
+            fontWeight: 700,
+            fontSize: "clamp(120px, 13.75vw, 198px)",
             letterSpacing: "-0.07em",
-            lineHeight: 1.1,
+            lineHeight: 1,
             textTransform: "capitalize",
             color: "#000",
             textAlign: "center",
             position: "relative",
+            zIndex: 1,
           }}
         >
           Testimonials

@@ -4,7 +4,8 @@
       "PowerShell(gh auth *)",
       "PowerShell(git *)",
       "PowerShell(gh repo *)",
-      "mcp__claude_ai_Figma__get_design_context"
+      "mcp__claude_ai_Figma__get_design_context",
+      "PowerShell($env:PATH = [System.Environment]::GetEnvironmentVariable\\(\"PATH\", \"Machine\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"PATH\", \"User\"\\); cd \"C:\\\\Users\\\\49176\\\\Desktop\\\\AI Project Sprint\" && git branch -a)"
     ]
   }
 }

@@ -1,9 +1,9 @@
 import type { CSSProperties } from "react";
 
-const img1 = "https://www.figma.com/api/mcp/asset/38bd3fd4-8821-4013-a009-d85a7ffd774e";
-const img2 = "https://www.figma.com/api/mcp/asset/9d4a635f-9800-4ba8-93a6-299d43a8092b";
-const img3 = "https://www.figma.com/api/mcp/asset/80060a01-f829-4012-8fbb-6b4e1ec55ef0";
-const img4 = "https://www.figma.com/api/mcp/asset/fff1d099-ae83-482c-80b2-b4a6438b777f";
+const img1 = "/cream_on_palmtree_leef.png";
+const img2 = "/dashboard_screenshot.png";
+const img3 = "/surfboard.png";
+const img4 = "/guy_with_kamera.png";
 
 const mono: CSSProperties = {
   fontFamily: "var(--font-geist-mono)",
@@ -29,7 +29,7 @@ const desktopDesc =
 
 export default function ServicesSection() {
   return (
-    <section className="w-full bg-black px-4 py-12 md:px-8 md:py-20 flex flex-col gap-8 md:gap-12">
+    <section data-nav-dark className="w-full bg-black px-4 py-12 md:px-8 md:py-20 flex flex-col gap-8 md:gap-12">
       {/* Section label */}
       <p style={mono}>[ Services ]</p>
 
