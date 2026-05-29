@@ -65,7 +65,7 @@ function TalkButton() {
 
 export default function Footer() {
   return (
-    <>
+    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 }}>
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
       <footer data-nav-dark className="md:hidden bg-black pt-12 px-4 flex flex-col gap-12">
         {/* Top */}
@@ -176,6 +176,6 @@ export default function Footer() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

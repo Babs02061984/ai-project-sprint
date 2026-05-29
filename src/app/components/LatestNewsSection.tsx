@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { CSSProperties } from "react";
 
 const img1d = "/hand_draws_wireframe.png";
@@ -17,23 +20,12 @@ const bodyText: CSSProperties = {
   color: "#1f1f1f",
 };
 
-function SmallArrow() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-      <path
-        d="M4 14L14 4M14 4H7M14 4V11"
-        stroke="#000"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const placeholder =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
-function ReadMore() {
+function ReadMore({ hovered }: { hovered: boolean }) {
   return (
-    <div className="flex gap-[10px] items-center border-b border-black pb-1 w-fit">
+    <div className="flex gap-[10px] items-center w-fit" style={{ position: "relative", paddingBottom: "4px" }}>
       <span
         style={{
           fontFamily: "var(--font-inter)",
@@ -46,20 +38,102 @@ function ReadMore() {
       >
         Read more
       </span>
-      <SmallArrow />
+      {/* Arrow shifts right on hover */}
+      <div
+        style={{
+          transform: hovered ? "translateX(5px)" : "translateX(0px)",
+          transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <path
+            d="M4 14L14 4M14 4H7M14 4V11"
+            stroke="#000"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+      {/* Underline draws from left */}
+      <span
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          height: "1px",
+          background: "#000",
+          transformOrigin: "left center",
+          transform: hovered ? "scaleX(1)" : "scaleX(0)",
+          transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      />
     </div>
   );
 }
 
-const placeholder =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+function NewsCard({
+  img,
+  mobile = false,
+  height = 469,
+  cardStyle,
+}: {
+  img: string;
+  mobile?: boolean;
+  height?: number;
+  cardStyle?: CSSProperties;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      className="flex flex-col gap-4 shrink-0"
+      style={{
+        cursor: "pointer",
+        transform: hovered ? "translateY(-8px)" : "translateY(0px)",
+        transition: "transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+        ...cardStyle,
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div
+        className="relative overflow-hidden"
+        style={{
+          height,
+          boxShadow: hovered
+            ? "0 20px 48px rgba(0,0,0,0.18)"
+            : "0 0px 0px rgba(0,0,0,0)",
+          transition: "box-shadow 0.45s ease",
+        }}
+      >
+        <img
+          src={img}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            transform: hovered ? "scale(1.06)" : "scale(1)",
+            filter: hovered ? "brightness(1.06)" : "brightness(1)",
+            transition:
+              "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease",
+          }}
+        />
+      </div>
+      <p style={bodyText}>{placeholder}</p>
+      <ReadMore hovered={hovered} />
+    </div>
+  );
+}
 
 export default function LatestNewsSection() {
   return (
     <>
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
-      <section className="md:hidden w-full flex flex-col gap-8 px-4 py-16" style={{ background: "#f3f3f3" }}>
-        {/* Heading */}
+      <section
+        className="md:hidden w-full flex flex-col gap-8 px-4 py-16"
+        style={{ background: "#f3f3f3" }}
+      >
         <p
           style={{
             fontFamily: "var(--font-inter)",
@@ -74,17 +148,10 @@ export default function LatestNewsSection() {
           Keep up with my latest news &amp; achievements
         </p>
 
-        {/* Horizontal scroll — 3 cards */}
         <div className="-mx-4 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
           <div className="flex gap-4 pl-4 pr-4" style={{ width: "max-content" }}>
             {[img1m, img2m, img3m].map((img, i) => (
-              <div key={i} className="flex flex-col gap-4 shrink-0" style={{ width: "300px" }}>
-                <div className="relative overflow-hidden" style={{ height: "398px" }}>
-                  <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                </div>
-                <p style={bodyText}>{placeholder}</p>
-                <ReadMore />
-              </div>
+              <NewsCard key={i} img={img} mobile height={398} cardStyle={{ width: "300px" }} />
             ))}
           </div>
         </div>
@@ -95,7 +162,7 @@ export default function LatestNewsSection() {
         className="hidden md:flex items-end justify-between px-8 py-[120px] w-full"
         style={{ background: "#f3f3f3" }}
       >
-        {/* Rotated heading — 110px wide column, 706px tall */}
+        {/* Rotated heading */}
         <div
           className="flex items-center justify-center shrink-0"
           style={{ width: "110px", height: "706px" }}
@@ -121,38 +188,24 @@ export default function LatestNewsSection() {
         {/* Cards + dividers */}
         <div className="flex items-end gap-0 flex-1 ml-8">
 
-          {/* Card 1 */}
-          <div className="flex flex-col gap-4 shrink-0" style={{ width: "353px", height: "581px", justifyContent: "flex-end" }}>
-            <div className="relative overflow-hidden" style={{ height: "469px" }}>
-              <img src={img1d} alt="" className="absolute inset-0 w-full h-full object-cover" />
-            </div>
-            <p style={bodyText}>{placeholder}</p>
-            <ReadMore />
-          </div>
+          <NewsCard
+            img={img1d}
+            cardStyle={{ width: "353px", height: "581px", justifyContent: "flex-end" }}
+          />
 
-          {/* Divider */}
           <div className="self-stretch mx-8 w-px bg-black shrink-0" />
 
-          {/* Card 2 — offset 120px from top */}
-          <div className="flex flex-col gap-4 shrink-0 pt-[120px]" style={{ width: "353px" }}>
-            <div className="relative overflow-hidden" style={{ height: "469px" }}>
-              <img src={img2d} alt="" className="absolute inset-0 w-full h-full object-cover" />
-            </div>
-            <p style={bodyText}>{placeholder}</p>
-            <ReadMore />
-          </div>
+          <NewsCard
+            img={img2d}
+            cardStyle={{ width: "353px", paddingTop: "120px" }}
+          />
 
-          {/* Divider */}
           <div className="self-stretch mx-8 w-px bg-black shrink-0" />
 
-          {/* Card 3 */}
-          <div className="flex flex-col gap-4 shrink-0" style={{ width: "353px", height: "581px", justifyContent: "flex-end" }}>
-            <div className="relative overflow-hidden" style={{ height: "469px" }}>
-              <img src={img3d} alt="" className="absolute inset-0 w-full h-full object-cover" />
-            </div>
-            <p style={bodyText}>{placeholder}</p>
-            <ReadMore />
-          </div>
+          <NewsCard
+            img={img3d}
+            cardStyle={{ width: "353px", height: "581px", justifyContent: "flex-end" }}
+          />
 
         </div>
       </section>
