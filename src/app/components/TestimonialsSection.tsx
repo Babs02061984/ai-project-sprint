@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import gsap from "gsap";
 
 // Desktop logo assets
 const logoLukas = "/Frame.svg";
@@ -11,6 +12,18 @@ const logoSofia = "/Frame_4.svg";
 // Mobile logo assets
 const logoMarkoMobile = "/Frame_2.svg";
 const logoSofiaMobile = "/Frame_4.svg";
+
+// Mouse parallax depth per card: [Marko, Lukas, Sarah, Sofia]
+// Higher = closer to viewer = moves more
+const DEPTHS = [0.038, 0.022, 0.048, 0.028];
+
+// Ambient float: [yOffset px, duration s, delay s] per card
+const FLOATS: [number, number, number][] = [
+  [14, 3.4, 0.0],
+  [10, 2.9, 1.2],
+  [18, 3.8, 0.6],
+  [12, 2.6, 2.0],
+];
 
 function TestimonialCard({
   logo,
@@ -115,7 +128,6 @@ const mobileCards = [
   },
 ];
 
-// Gap between cards in the peek slider (px)
 const CARD_GAP = 12;
 
 function MobileSlider() {
@@ -125,7 +137,6 @@ function MobileSlider() {
   const handleScroll = () => {
     const el = containerRef.current;
     if (!el) return;
-    // Card width = 82vw; gap = CARD_GAP. Step = cardWidth + gap.
     const cardWidth = el.offsetWidth * 0.82;
     const index = Math.round(el.scrollLeft / (cardWidth + CARD_GAP));
     setCurrent(Math.min(Math.max(index, 0), mobileCards.length - 1));
@@ -141,7 +152,6 @@ function MobileSlider() {
 
   return (
     <>
-      {/* Peek slider — 82vw cards leave ~18vw for the next card to peek in */}
       <div
         ref={containerRef}
         onScroll={handleScroll}
@@ -150,39 +160,25 @@ function MobileSlider() {
           overflowX: "auto",
           scrollSnapType: "x mandatory",
           scrollbarWidth: "none",
-          // @ts-ignore — non-standard but needed for Safari momentum scrolling
+          // @ts-ignore
           WebkitOverflowScrolling: "touch",
           paddingLeft: 16,
           paddingRight: 16,
           gap: CARD_GAP,
-          // Hide scrollbar on webkit
           msOverflowStyle: "none",
         }}
       >
         {mobileCards.map((card, i) => (
           <div
             key={i}
-            style={{
-              scrollSnapAlign: "start",
-              flexShrink: 0,
-              // 82vw so ~18vw of the next card peeks in from the right
-              width: "82vw",
-            }}
+            style={{ scrollSnapAlign: "start", flexShrink: 0, width: "82vw" }}
           >
             <TestimonialCard {...card} rotate={0} width="100%" />
           </div>
         ))}
       </div>
 
-      {/* Dot indicators — sync with scroll position */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: 8,
-          padding: "16px 0 32px",
-        }}
-      >
+      <div style={{ display: "flex", justifyContent: "center", gap: 8, padding: "16px 0 32px" }}>
         {mobileCards.map((_, i) => (
           <button
             key={i}
@@ -206,14 +202,69 @@ function MobileSlider() {
 }
 
 export default function TestimonialsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Outer wrappers: receive mouse-parallax x/y
+  const parallaxRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
+  // Inner wrappers: receive ambient float y
+  const floatRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
+
+  const quickXs = useRef<ReturnType<typeof gsap.quickTo>[]>([]);
+  const quickYs = useRef<ReturnType<typeof gsap.quickTo>[]>([]);
+
+  // Set up GSAP quickTo for mouse parallax + kick off ambient floats
+  useEffect(() => {
+    parallaxRefs.current.forEach((el, i) => {
+      if (!el) return;
+      quickXs.current[i] = gsap.quickTo(el, "x", { duration: 0.9, ease: "power2.out" });
+      quickYs.current[i] = gsap.quickTo(el, "y", { duration: 0.9, ease: "power2.out" });
+    });
+
+    const floatTweens = floatRefs.current.map((el, i) => {
+      if (!el) return null;
+      const [yOffset, duration, delay] = FLOATS[i];
+      return gsap.to(el, {
+        y: yOffset,
+        duration,
+        delay,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
+    });
+
+    return () => {
+      floatTweens.forEach((t) => t?.kill());
+    };
+  }, []);
+
+  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const dx = e.clientX - rect.left - rect.width / 2;
+    const dy = e.clientY - rect.top - rect.height / 2;
+    DEPTHS.forEach((depth, i) => {
+      quickXs.current[i]?.(dx * depth);
+      quickYs.current[i]?.(dy * depth);
+    });
+  }, []);
+
+  const onMouseLeave = useCallback(() => {
+    quickXs.current.forEach((fn) => fn?.(0));
+    quickYs.current.forEach((fn) => fn?.(0));
+  }, []);
+
+  const setParallaxRef = (i: number) => (el: HTMLDivElement | null) => {
+    parallaxRefs.current[i] = el;
+  };
+  const setFloatRef = (i: number) => (el: HTMLDivElement | null) => {
+    floatRefs.current[i] = el;
+  };
+
   return (
     <>
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
-      <section
-        className="md:hidden w-full bg-white"
-        style={{ paddingTop: 64 }}
-      >
-        {/* Heading */}
+      <section className="md:hidden w-full bg-white" style={{ paddingTop: 64 }}>
         <div style={{ paddingLeft: 16, paddingRight: 16, marginBottom: 8 }}>
           <h2
             style={{
@@ -229,69 +280,90 @@ export default function TestimonialsSection() {
             Testimonials
           </h2>
         </div>
-
-        {/* Peek slider with synced dots */}
         <MobileSlider />
       </section>
 
       {/* ── DESKTOP ────────────────────────────────────────────────────── */}
-      {/*
-        No overflow-hidden so rotated cards at the edges aren't clipped.
-        Heading: zIndex 1  |  Cards: zIndex 2  → cards overlap the heading text.
-      */}
       <section
+        ref={sectionRef}
         className="hidden md:flex w-full bg-white items-center justify-center relative"
         style={{ minHeight: "940px", padding: "100px 32px" }}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
       >
-        {/* Marko Stojković — top left, rotated CCW */}
-        <div className="absolute" style={{ left: "7.1%", top: "130px", zIndex: 2 }}>
-          <TestimonialCard
-            logo={logoMarko}
-            logoW={143}
-            logoH={19}
-            quote="A brilliant creative partner who transformed our vision into a unique, high-impact brand identity. Their ability to craft everything from custom mascots to polished logos is truly impressive."
-            name="Marko Stojković"
-            rotate={-6.85}
-          />
+        {/* Marko — top left */}
+        <div
+          ref={setParallaxRef(0)}
+          className="absolute"
+          style={{ left: "7.1%", top: "130px", zIndex: 2 }}
+        >
+          <div ref={setFloatRef(0)}>
+            <TestimonialCard
+              logo={logoMarko}
+              logoW={143}
+              logoH={19}
+              quote="A brilliant creative partner who transformed our vision into a unique, high-impact brand identity. Their ability to craft everything from custom mascots to polished logos is truly impressive."
+              name="Marko Stojković"
+              rotate={-6.85}
+            />
+          </div>
         </div>
 
-        {/* Lukas Weber — center right, rotated CW */}
-        <div className="absolute" style={{ left: "47%", top: "255px", zIndex: 2 }}>
-          <TestimonialCard
-            logo={logoLukas}
-            logoW={138}
-            logoH={19}
-            quote="Professional, precise, and incredibly fast at handling complex product visualizations and templates."
-            name="Lukas Weber"
-            rotate={2.9}
-          />
+        {/* Lukas — center right */}
+        <div
+          ref={setParallaxRef(1)}
+          className="absolute"
+          style={{ left: "47%", top: "255px", zIndex: 2 }}
+        >
+          <div ref={setFloatRef(1)}>
+            <TestimonialCard
+              logo={logoLukas}
+              logoW={138}
+              logoH={19}
+              quote="Professional, precise, and incredibly fast at handling complex product visualizations and templates."
+              name="Lukas Weber"
+              rotate={2.9}
+            />
+          </div>
         </div>
 
-        {/* Sarah Jenkins — bottom left, rotated CW */}
-        <div className="absolute" style={{ left: "21%", top: "540px", zIndex: 2 }}>
-          <TestimonialCard
-            logo={logoSarah}
-            logoW={109}
-            logoH={31}
-            quote="A strategic partner who balances stunning aesthetics with high-performance UX for complex platforms. They don't just make things look good; they solve business problems through visual clarity."
-            name="Sarah Jenkins"
-            rotate={2.23}
-          />
+        {/* Sarah — bottom left */}
+        <div
+          ref={setParallaxRef(2)}
+          className="absolute"
+          style={{ left: "21%", top: "540px", zIndex: 2 }}
+        >
+          <div ref={setFloatRef(2)}>
+            <TestimonialCard
+              logo={logoSarah}
+              logoW={109}
+              logoH={31}
+              quote="A strategic partner who balances stunning aesthetics with high-performance UX for complex platforms. They don't just make things look good; they solve business problems through visual clarity."
+              name="Sarah Jenkins"
+              rotate={2.23}
+            />
+          </div>
         </div>
 
-        {/* Sofia Martínez — bottom right, rotated CCW */}
-        <div className="absolute" style={{ left: "68.5%", top: "530px", zIndex: 2 }}>
-          <TestimonialCard
-            logo={logoSofia}
-            logoW={81}
-            logoH={36}
-            quote="An incredibly versatile designer who delivers consistent quality across a wide range of styles and formats."
-            name="Sofia Martínez"
-            rotate={-4.15}
-          />
+        {/* Sofia — bottom right */}
+        <div
+          ref={setParallaxRef(3)}
+          className="absolute"
+          style={{ left: "68.5%", top: "530px", zIndex: 2 }}
+        >
+          <div ref={setFloatRef(3)}>
+            <TestimonialCard
+              logo={logoSofia}
+              logoW={81}
+              logoH={36}
+              quote="An incredibly versatile designer who delivers consistent quality across a wide range of styles and formats."
+              name="Sofia Martínez"
+              rotate={-4.15}
+            />
+          </div>
         </div>
 
-        {/* Heading — centered, behind all cards */}
+        {/* Heading — behind cards */}
         <h2
           style={{
             fontFamily: "var(--font-inter)",
