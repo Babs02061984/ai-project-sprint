@@ -1,5 +1,12 @@
+"use client";
+
+import { useRef, useEffect } from "react";
 import type { CSSProperties } from "react";
 import MagneticButton from "./MagneticButton";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const socialStyle: CSSProperties = {
   fontFamily: "var(--font-inter)",
@@ -64,8 +71,26 @@ function TalkButton() {
 }
 
 export default function Footer() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(ref.current, {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top 95%",
+        },
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 0 }}>
+    <div ref={ref}>
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
       <footer data-nav-dark className="md:hidden bg-black pt-12 px-4 flex flex-col gap-12">
         {/* Top */}

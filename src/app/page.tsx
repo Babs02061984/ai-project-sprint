@@ -49,20 +49,18 @@ export default async function Home() {
   const [selectedWork, heroImages] = await Promise.all([getSelectedWork(), getHeroImages()])
   return (
     <>
-    <div style={{ position: "relative", zIndex: 1 }}>
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8">
-        <HeroNav />
-      </header>
-      <HeroSection desktopSrc={heroImages.desktop} mobileSrc={heroImages.mobile} />
-      <IntroSection />
-      <AboutSection />
-      <TextFillSection />
-      <FullBleedPhoto />
-      <ServicesSection />
-      <SelectedWorkSection projects={selectedWork} />
-      <TestimonialsSection />
-      <LatestNewsSection />
-    </div>
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8">
+      <HeroNav />
+    </header>
+    <HeroSection desktopSrc={heroImages.desktop} mobileSrc={heroImages.mobile} />
+    <IntroSection />
+    <AboutSection />
+    <TextFillSection />
+    <FullBleedPhoto />
+    <ServicesSection />
+    <SelectedWorkSection projects={selectedWork} />
+    <TestimonialsSection />
+    <LatestNewsSection />
     <Footer />
     </>
   );
