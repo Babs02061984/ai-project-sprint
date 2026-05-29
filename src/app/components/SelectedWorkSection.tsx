@@ -1,8 +1,7 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useState } from "react"
 import type { CSSProperties } from "react"
-import gsap from "gsap"
 import MagneticButton from "./MagneticButton"
 
 export type PortfolioProject = {
@@ -37,30 +36,6 @@ function Tag({ label }: { label: string }) {
     >
       {label}
     </span>
-  )
-}
-
-function ArrowIcon({ active }: { active: boolean }) {
-  return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      aria-hidden="true"
-      style={{
-        transform: active ? "rotate(45deg) scale(1.25)" : "rotate(0deg) scale(1)",
-        transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-      }}
-    >
-      <path
-        d="M8 24L24 8M24 8H12M24 8V20"
-        stroke="#000"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   )
 }
 
@@ -112,143 +87,119 @@ function ProjectCard({
   tags,
   height,
   titleSize,
-  active,
-  dimmed,
-  onMouseEnter,
-  onMouseLeave,
 }: {
   title: string
   coverImageUrl: string | null
   tags: string[]
   height: number
   titleSize: number
-  active: boolean
-  dimmed: boolean
-  onMouseEnter: () => void
-  onMouseLeave: () => void
 }) {
+  const [hovered, setHovered] = useState(false)
+
   return (
     <div
-      className="flex flex-col gap-[10px] w-full"
+      className="flex flex-col gap-[10px] w-full cursor-pointer"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
-        opacity: dimmed ? 0.35 : 1,
-        transform: active ? "translateY(-10px)" : "translateY(0px)",
-        transition: "opacity 0.4s ease, transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
-        cursor: "pointer",
+        transform: hovered ? "translateY(-8px)" : "translateY(0px)",
+        transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
       }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
     >
-      <div className="relative w-full overflow-hidden bg-neutral-100" style={{ height }}>
+      {/* Image container */}
+      <div
+        className="relative w-full overflow-hidden bg-neutral-100"
+        style={{
+          height,
+          boxShadow: hovered
+            ? "0 24px 48px rgba(0,0,0,0.18)"
+            : "0 0px 0px rgba(0,0,0,0)",
+          transition: "box-shadow 0.5s ease",
+        }}
+      >
         {coverImageUrl && (
           <img
             src={coverImageUrl}
             alt={title}
             className="absolute inset-0 w-full h-full object-cover"
             style={{
-              transform: active ? "scale(1.07)" : "scale(1)",
-              transition: "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)",
+              transform: hovered ? "scale(1.06)" : "scale(1)",
+              filter: hovered ? "brightness(1.06)" : "brightness(1)",
+              transition:
+                "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease",
             }}
           />
         )}
-        {/* Dark veil lifts on hover */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(0,0,0,0.25)",
-            opacity: active ? 0 : 1,
-            transition: "opacity 0.45s ease",
-          }}
-        />
         <div className="absolute bottom-4 left-4 flex gap-3">
           {tags.map((t) => (
             <Tag key={t} label={t} />
           ))}
         </div>
       </div>
-      <div className="flex items-center justify-between w-full">
+
+      {/* Title + arrow row */}
+      <div className="flex items-center justify-between w-full gap-4">
+        {/* Title with underline draw */}
         <p
           style={{
             fontFamily: "var(--font-inter)",
             fontWeight: 900,
             fontSize: `${titleSize}px`,
-            letterSpacing: active ? "-0.01em" : "-0.04em",
+            letterSpacing: "-0.04em",
             lineHeight: 1.1,
             textTransform: "uppercase",
             color: "#000",
             whiteSpace: "nowrap",
-            transition: "letter-spacing 0.35s ease",
+            position: "relative",
+            display: "inline-block",
           }}
         >
           {title}
+          <span
+            style={{
+              position: "absolute",
+              bottom: "-3px",
+              left: 0,
+              width: "100%",
+              height: "2px",
+              background: "#000",
+              transformOrigin: "left center",
+              transform: hovered ? "scaleX(1)" : "scaleX(0)",
+              transition: "transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          />
         </p>
-        <ArrowIcon active={active} />
+
+        {/* Arrow — shifts right on hover */}
+        <div
+          style={{
+            transform: hovered ? "translateX(6px)" : "translateX(0px)",
+            transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+            flexShrink: 0,
+          }}
+        >
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path
+              d="M8 24L24 8M24 8H12M24 8V20"
+              stroke="#000"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
       </div>
     </div>
   )
 }
 
 export default function SelectedWorkSection({ projects }: { projects: PortfolioProject[] }) {
-  const [activeId, setActiveId] = useState<string | null>(null)
-  const followerRef = useRef<HTMLDivElement>(null)
-  const xTo = useRef<ReturnType<typeof gsap.quickTo> | undefined>(undefined)
-  const yTo = useRef<ReturnType<typeof gsap.quickTo> | undefined>(undefined)
-
   const leftItems = projects.slice(0, 2)
   const rightItems = projects.slice(2, 4)
-  const activeProject = projects.find((p) => p._id === activeId) ?? null
-  const hasHover = activeId !== null
-
-  useEffect(() => {
-    if (!followerRef.current) return
-    xTo.current = gsap.quickTo(followerRef.current, "x", { duration: 0.65, ease: "power3.out" })
-    yTo.current = gsap.quickTo(followerRef.current, "y", { duration: 0.65, ease: "power3.out" })
-
-    const onMove = (e: MouseEvent) => {
-      xTo.current?.(e.clientX - 150)
-      yTo.current?.(e.clientY - 210)
-    }
-    window.addEventListener("mousemove", onMove)
-    return () => window.removeEventListener("mousemove", onMove)
-  }, [])
 
   return (
     <>
-      {/* ── Cursor-following image (desktop only, fixed overlay) ─────────── */}
-      <div
-        ref={followerRef}
-        className="hidden md:block"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: 300,
-          height: 380,
-          pointerEvents: "none",
-          zIndex: 45,
-          willChange: "transform",
-          overflow: "hidden",
-          // Split-wipe reveal: clipped to a horizontal sliver → full open
-          clipPath: hasHover ? "inset(0% 0% 0% 0%)" : "inset(50% 0% 50% 0%)",
-          opacity: hasHover ? 1 : 0,
-          transition:
-            "clip-path 0.55s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease",
-          transform: "rotate(-2deg)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
-        }}
-      >
-        {activeProject?.coverImageUrl && (
-          <img
-            key={activeProject._id}
-            src={activeProject.coverImageUrl}
-            alt=""
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-          />
-        )}
-      </div>
-
-      {/* ── MOBILE layout ─────────────────────────────────────────────────── */}
+      {/* ── MOBILE layout ─────────────────────────────────────────────── */}
       <section className="md:hidden w-full bg-white px-4 py-12 flex flex-col gap-8">
         <div className="flex flex-col gap-4 uppercase">
           <p style={mono}>[ portfolio ]</p>
@@ -280,10 +231,6 @@ export default function SelectedWorkSection({ projects }: { projects: PortfolioP
               tags={project.tags ?? []}
               height={390}
               titleSize={24}
-              active={false}
-              dimmed={false}
-              onMouseEnter={() => {}}
-              onMouseLeave={() => {}}
             />
           ))}
         </div>
@@ -291,7 +238,7 @@ export default function SelectedWorkSection({ projects }: { projects: PortfolioP
         <CtaBlock />
       </section>
 
-      {/* ── DESKTOP layout ────────────────────────────────────────────────── */}
+      {/* ── DESKTOP layout ────────────────────────────────────────────── */}
       <section className="hidden md:block w-full bg-white px-8 py-20">
         <div className="flex items-start justify-between w-full mb-[61px]">
           <div className="flex gap-[10px] items-start">
@@ -309,10 +256,17 @@ export default function SelectedWorkSection({ projects }: { projects: PortfolioP
               <p>Selected</p>
               <p>Work</p>
             </div>
-            <p style={{ ...mono, marginTop: "4px" }}>{String(projects.length).padStart(3, "0")}</p>
+            <p style={{ ...mono, marginTop: "4px" }}>
+              {String(projects.length).padStart(3, "0")}
+            </p>
           </div>
-          <div className="flex items-center justify-center" style={{ height: "110px", width: "15px" }}>
-            <p style={{ ...mono, transform: "rotate(-90deg)", whiteSpace: "nowrap" }}>[ portfolio ]</p>
+          <div
+            className="flex items-center justify-center"
+            style={{ height: "110px", width: "15px" }}
+          >
+            <p style={{ ...mono, transform: "rotate(-90deg)", whiteSpace: "nowrap" }}>
+              [ portfolio ]
+            </p>
           </div>
         </div>
 
@@ -326,10 +280,6 @@ export default function SelectedWorkSection({ projects }: { projects: PortfolioP
                 tags={leftItems[0].tags ?? []}
                 height={744}
                 titleSize={36}
-                active={activeId === leftItems[0]._id}
-                dimmed={hasHover && activeId !== leftItems[0]._id}
-                onMouseEnter={() => setActiveId(leftItems[0]._id)}
-                onMouseLeave={() => setActiveId(null)}
               />
             )}
             <CtaBlock />
@@ -340,10 +290,6 @@ export default function SelectedWorkSection({ projects }: { projects: PortfolioP
                 tags={leftItems[1].tags ?? []}
                 height={699}
                 titleSize={36}
-                active={activeId === leftItems[1]._id}
-                dimmed={hasHover && activeId !== leftItems[1]._id}
-                onMouseEnter={() => setActiveId(leftItems[1]._id)}
-                onMouseLeave={() => setActiveId(null)}
               />
             )}
           </div>
@@ -359,10 +305,6 @@ export default function SelectedWorkSection({ projects }: { projects: PortfolioP
                   tags={project.tags ?? []}
                   height={699}
                   titleSize={36}
-                  active={activeId === project._id}
-                  dimmed={hasHover && activeId !== project._id}
-                  onMouseEnter={() => setActiveId(project._id)}
-                  onMouseLeave={() => setActiveId(null)}
                 />
               ))}
             </div>
