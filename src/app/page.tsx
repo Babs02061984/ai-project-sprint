@@ -2,7 +2,7 @@ import HeroNav from "./components/HeroNav";
 import HeroSection from "./components/HeroSection";
 import IntroSection from "./components/IntroSection";
 import AboutSection from "./components/AboutSection";
-import ServicesSection from "./components/ServicesSection";
+import ServicesSection, { type SanityService } from "./components/ServicesSection";
 import SelectedWorkSection from "./components/SelectedWorkSection";
 import type {PortfolioProject} from "./components/SelectedWorkSection";
 import TestimonialsSection from "./components/TestimonialsSection";
@@ -32,6 +32,18 @@ async function getSelectedWork(): Promise<PortfolioProject[]> {
   }))
 }
 
+async function getServices(): Promise<SanityService[]> {
+  const data = await sanityClient.fetch(`
+    *[_type == "service"] | order(order asc) {
+      _id,
+      title,
+      description,
+      order
+    }
+  `)
+  return data ?? []
+}
+
 async function getHeroImages() {
   const data = await sanityClient.fetch(`
     *[_type == "homepage"][0]{
@@ -46,7 +58,7 @@ async function getHeroImages() {
 }
 
 export default async function Home() {
-  const [selectedWork, heroImages] = await Promise.all([getSelectedWork(), getHeroImages()])
+  const [selectedWork, heroImages, services] = await Promise.all([getSelectedWork(), getHeroImages(), getServices()])
   return (
     <>
     <header className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8">
@@ -57,7 +69,7 @@ export default async function Home() {
     <AboutSection />
     <TextFillSection />
     <FullBleedPhoto />
-    <ServicesSection />
+    <ServicesSection services={services} />
     <SelectedWorkSection projects={selectedWork} />
     <TestimonialsSection />
     <LatestNewsSection />

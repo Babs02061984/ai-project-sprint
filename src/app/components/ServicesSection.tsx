@@ -3,10 +3,12 @@
 import { useState } from "react";
 import type { CSSProperties } from "react";
 
-const img1 = "/cream_on_palmtree_leef.png";
-const img2 = "/dashboard_screenshot.png";
-const img3 = "/surfboard.png";
-const img4 = "/signs_hanging_in_the_hall.png";
+const imgs = [
+  "/cream_on_palmtree_leef.png",
+  "/dashboard_screenshot.png",
+  "/surfboard.png",
+  "/signs_hanging_in_the_hall.png",
+];
 
 const mono: CSSProperties = {
   fontFamily: "var(--font-geist-mono)",
@@ -17,20 +19,14 @@ const mono: CSSProperties = {
   textTransform: "uppercase",
 };
 
-const services = [
-  { num: "[ 1 ]", title: "Brand Discovery", img: img1 },
-  { num: "[ 2 ]", title: "Web Design & Dev", img: img2 },
-  { num: "[ 3 ]", title: "Marketing", img: img3 },
-  { num: "[ 4 ]", title: "Photography", img: img4 },
-];
+export type SanityService = {
+  _id: string;
+  title: string;
+  description?: string;
+  order?: number;
+};
 
-const mobileDesc =
-  "We are a creative studio that loves making beautiful websites and premium products. We've won some awards for our work. We're really good at creating brands, designing cool stuff, and making things work just right.";
-
-const desktopDesc =
-  "Placeholder description of this service. Explain the value you provide and the outcomes clients can expect. Keep it to two or three sentences.";
-
-export default function ServicesSection() {
+export default function ServicesSection({ services }: { services: SanityService[] }) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
@@ -52,19 +48,21 @@ export default function ServicesSection() {
           whiteSpace: "nowrap",
         }}
       >
-        <span>[4]</span>
+        <span>[{services.length}]</span>
         <span>Deliverables</span>
       </div>
 
       {/* Service list */}
       <div className="flex flex-col gap-12 w-full">
-        {services.map(({ num, title, img }, i) => {
+        {services.map(({ title, description }, i) => {
           const isHovered = hovered === i;
           const isDimmed = hovered !== null && !isHovered;
+          const img = imgs[i % imgs.length];
+          const num = `[ ${String(i + 1).padStart(2, "0")} ]`;
 
           return (
             <div
-              key={num}
+              key={title}
               className="flex flex-col gap-[9px] w-full cursor-pointer"
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
@@ -109,18 +107,20 @@ export default function ServicesSection() {
                   {title}
                 </p>
                 <div className="flex flex-col gap-4">
-                  <p
-                    style={{
-                      fontFamily: "var(--font-inter)",
-                      fontWeight: 400,
-                      fontSize: "14px",
-                      lineHeight: 1.3,
-                      letterSpacing: "-0.04em",
-                      color: "#ffffff",
-                    }}
-                  >
-                    {mobileDesc}
-                  </p>
+                  {description && (
+                    <p
+                      style={{
+                        fontFamily: "var(--font-inter)",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        lineHeight: 1.5,
+                        letterSpacing: "-0.03em",
+                        color: "rgba(255,255,255,0.75)",
+                      }}
+                    >
+                      {description}
+                    </p>
+                  )}
                   <div className="overflow-hidden" style={{ width: "151px", height: "151px" }}>
                     <img
                       src={img}
@@ -161,19 +161,21 @@ export default function ServicesSection() {
                 </p>
 
                 <div className="flex gap-6 items-start">
-                  <p
-                    style={{
-                      fontFamily: "var(--font-inter)",
-                      fontWeight: 400,
-                      fontSize: "14px",
-                      lineHeight: 1.3,
-                      letterSpacing: "-0.04em",
-                      color: "#ffffff",
-                      width: "393px",
-                    }}
-                  >
-                    {desktopDesc}
-                  </p>
+                  {description && (
+                    <p
+                      style={{
+                        fontFamily: "var(--font-inter)",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        lineHeight: 1.5,
+                        letterSpacing: "-0.03em",
+                        color: "rgba(255,255,255,0.75)",
+                        width: "393px",
+                      }}
+                    >
+                      {description}
+                    </p>
+                  )}
                   <div
                     className="shrink-0 overflow-hidden"
                     style={{ width: "151px", height: "151px" }}
