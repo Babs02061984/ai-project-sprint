@@ -48,12 +48,16 @@ async function getHeroImages() {
   const data = await sanityClient.fetch(`
     *[_type == "homepage"][0]{
       "desktop": heroImage.asset->url,
-      "mobile": heroImageMobile.asset->url
+      "mobile": heroImageMobile.asset->url,
+      "about": aboutImage.asset->url,
+      "fullBleed": fullBleedImage.asset->url
     }
   `)
   return {
     desktop: (data?.desktop as string) ?? '',
     mobile: (data?.mobile as string) ?? '',
+    about: (data?.about as string) ?? '',
+    fullBleed: (data?.fullBleed as string) ?? '',
   }
 }
 
@@ -66,9 +70,9 @@ export default async function Home() {
     </header>
     <HeroSection desktopSrc={heroImages.desktop} mobileSrc={heroImages.mobile} />
     <IntroSection />
-    <AboutSection />
+    <AboutSection imageSrc={heroImages.about} />
     <TextFillSection />
-    <FullBleedPhoto />
+    <FullBleedPhoto src={heroImages.fullBleed} />
     <ServicesSection services={services} />
     <SelectedWorkSection projects={selectedWork} />
     <TestimonialsSection />

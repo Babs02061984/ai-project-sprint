@@ -6,9 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const photo = "/guy_with_kamera.png";
-
-export default function FullBleedPhoto() {
+export default function FullBleedPhoto({ src = "/guy_with_kamera.png" }: { src?: string }) {
+  const photo = src;
   const containerRef = useRef<HTMLDivElement>(null);
   const imgRef       = useRef<HTMLImageElement>(null);
 

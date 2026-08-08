@@ -3,7 +3,6 @@ import MagneticButton from "./MagneticButton";
 import RevealImage from "./RevealImage";
 import ParallaxLeft from "./ParallaxLeft";
 
-const aboutImage = "/dark_Man_face.png";
 
 const mono: CSSProperties = {
   fontFamily: "var(--font-geist-mono)",
@@ -58,7 +57,7 @@ function BracketedText() {
   );
 }
 
-export default function AboutSection() {
+export default function AboutSection({ imageSrc = "/dark_Man_face.png" }: { imageSrc?: string }) {
   return (
     <>
       {/* ── MOBILE layout ─────────────────────────────────────────────── */}
@@ -73,7 +72,7 @@ export default function AboutSection() {
 
           {/* Full-width portrait, flush to section bottom */}
           <RevealImage
-            src={aboutImage}
+            src={imageSrc}
             alt="Portrait"
             containerClassName="w-full aspect-[3/4] overflow-hidden"
             imgClassName="w-full h-full object-cover object-top"
@@ -99,7 +98,7 @@ export default function AboutSection() {
           <div className="flex gap-6 items-start shrink-0">
             <p style={mono}>002</p>
             <RevealImage
-              src={aboutImage}
+              src={imageSrc}
               alt="Portrait"
               containerClassName="overflow-hidden shrink-0"
               containerStyle={{ width: "436px", height: "614px" }}
