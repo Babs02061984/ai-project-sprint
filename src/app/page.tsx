@@ -54,10 +54,10 @@ async function getHeroImages() {
     }
   `)
   return {
-    desktop: (data?.desktop as string) ?? '',
-    mobile: (data?.mobile as string) ?? '',
-    about: (data?.about as string) ?? '',
-    fullBleed: (data?.fullBleed as string) ?? '',
+    desktop: (data?.desktop as string) || '',
+    mobile: (data?.mobile as string) || '',
+    about: (data?.about as string) || undefined,
+    fullBleed: (data?.fullBleed as string) || undefined,
   }
 }
 
